@@ -139,6 +139,8 @@ export default defineComponent({
 
 .map-container {
   position: relative;
+  width: 100%;
+  height: 100vh;
 }
 
 .location-btn {
@@ -146,9 +148,13 @@ export default defineComponent({
   top: 80px;
   right: 10px;
   z-index: 1000;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  background-color: white !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 4px !important;
+}
+
+.location-btn:hover {
+  background-color: #f0f0f0 !important;
 }
 
 .leaflet-control-zoom {
