@@ -15,19 +15,29 @@
     </div>
     <div class="right-content">
       <div id="map"></div>
-      <div class="sliding-sidebar" :class="{ 'expanded': expanded }">
-        <h3>{{ selectedButton }}</h3>
-        <v-text-field
+      <div class="sliding-sidebar" :class="{ 'expanded': expanded, 'wide': isWide }">
+        <div class="sidebar-header">
+          <h3>{{ selectedButton }}</h3>
+          <v-btn icon @click="toggleSidebarWidth">
+            <v-icon>{{ isWide ? 'mdi-chevron-left' : 'mdi-chevron-right' }}</v-icon>
+          </v-btn>
+        </div>
+        <v-btn
           v-if="['위기탐색', '자원탐색'].includes(selectedButton)"
-          v-model="searchQuery"
-          label="장소, 버스, 지하철, 도로 검색"
-          prepend-inner-icon="mdi-magnify"
-          outlined
-          dense
-          class="search-bar"
-          @keyup.enter="handleSearch"
-          :loading="isLoading"
-        ></v-text-field>
+          @click="openDaumPostcode"
+          color="primary"
+          class="mb-4"
+        >
+          주소 검색
+        </v-btn>
+        <v-alert
+          v-if="errorMessage"
+          type="error"
+          dismissible
+          @input="errorMessage = ''"
+        >
+          {{ errorMessage }}
+        </v-alert>
       </div>
       <v-tooltip text="현재위치">
         <template v-slot:activator="{ props }">
@@ -51,19 +61,6 @@ import { defineComponent, onMounted, ref } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchLandmarks } from '../services/wikipediaService';
-import axios from 'axios';
-
-const mockSearchApi = async (query: string) => {
-  if (query.toLowerCase().includes('라피니엘') || query.toLowerCase().includes('rafiniel')) {
-    return [{
-      name: '라피니엘',
-      lat: 37.5665,
-      lon: 126.9780,
-      address: 'Seoul, South Korea'
-    }];
-  }
-  return [];
-};
 
 export default defineComponent({
   name: 'Map',
@@ -71,9 +68,9 @@ export default defineComponent({
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
     const expanded = ref(false);
+    const isWide = ref(false);
     const selectedButton = ref('');
-    const searchQuery = ref('');
-    const isLoading = ref(false);
+    const errorMessage = ref('');
     const sidebarButtons = ref([
       { text: '위기탐색', icon: 'mdi-alert' },
       { text: '자원탐색', icon: 'mdi-magnify' },
@@ -160,38 +157,35 @@ export default defineComponent({
       console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
     };
 
-    const performSearch = async (query: string) => {
-      try {
-        isLoading.value = true;
-        const results = await mockSearchApi(query);
-        
-        map.value?.eachLayer((layer) => {
-          if (layer instanceof L.Marker && layer !== userMarker.value) {
-            map.value?.removeLayer(layer);
-          }
-        });
-
-        results.forEach((result: any) => {
-          const marker = L.marker([result.lat, result.lon]).addTo(map.value!);
-          marker.bindPopup(`<b>${result.name}</b><br>${result.address}`);
-        });
-
-        if (results.length > 0) {
-          map.value?.fitBounds(L.latLngBounds(results.map((result: any) => [result.lat, result.lon])));
-        } else {
-          alert('No results found');
-        }
-      } catch (error) {
-        console.error('Error performing search:', error);
-        alert('Error performing search. Please try again.');
-      } finally {
-        isLoading.value = false;
-      }
+    const toggleSidebarWidth = () => {
+      isWide.value = !isWide.value;
     };
 
-    const handleSearch = () => {
-      console.log('Search query:', searchQuery.value);
-      performSearch(searchQuery.value);
+    const openDaumPostcode = () => {
+      new (window as any).daum.Postcode({
+        oncomplete: function(data: any) {
+          console.log(data);
+          if (map.value) {
+            const lat = parseFloat(data.y);
+            const lon = parseFloat(data.x);
+            if (!isNaN(lat) && !isNaN(lon)) {
+              map.value.setView([lat, lon], 14);
+              L.marker([lat, lon]).addTo(map.value)
+                .bindPopup(`<b>${data.address}</b>`)
+                .openPopup();
+            } else {
+              errorMessage.value = '주소의 좌표를 찾을 수 없습니다.';
+            }
+          }
+        },
+        onclose: function(state: string) {
+          if (state === 'FORCE_CLOSE') {
+            errorMessage.value = '주소 검색이 취소되었습니다.';
+          } else if (state === 'COMPLETE_CLOSE') {
+            errorMessage.value = '';
+          }
+        }
+      }).open();
     };
 
     onMounted(() => {
@@ -203,11 +197,12 @@ export default defineComponent({
       getUserLocation,
       sidebarButtons,
       expanded,
+      isWide,
       selectedButton,
       expandSidebar,
-      searchQuery,
-      handleSearch,
-      isLoading
+      toggleSidebarWidth,
+      errorMessage,
+      openDaumPostcode
     };
   }
 });
@@ -247,14 +242,26 @@ export default defineComponent({
   width: 390px;
   height: 100%;
   background-color: white;
-  transition: left 0.3s ease;
+  transition: left 0.3s ease, width 0.3s ease;
   z-index: 1000;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  overflow-y: auto;
 }
 
 .sliding-sidebar.expanded {
   left: 0;
+}
+
+.sliding-sidebar.wide {
+  width: 780px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .sidebar-btn {
@@ -310,22 +317,5 @@ export default defineComponent({
 
 .leaflet-control-zoom a:hover {
   background-color: #f4f4f4;
-}
-
-.search-bar {
-  margin-top: 20px;
-}
-
-.search-bar :deep(.v-field__outline) {
-  border-color: #4CAF50 !important;
-}
-
-.search-bar :deep(.v-field__input) {
-  padding-left: 40px;
-}
-
-.search-bar :deep(.v-input__prepend-inner) {
-  margin-top: 8px;
-  margin-right: -30px;
 }
 </style>
