@@ -10,7 +10,7 @@
           @click="getUserLocation"
           v-bind="props"
         >
-          <v-icon>mdi-crosshairs-gps</v-icon>
+          <img src="/free-icon-font-location-crosshairs-9245169.png" alt="Get Location" width="24" height="24" />
         </v-btn>
       </template>
     </v-tooltip>
@@ -30,7 +30,7 @@ export default defineComponent({
     const userMarker = ref<L.Marker | null>(null);
 
     const initMap = () => {
-      map.value = L.map('map', { zoomControl: false }).setView([35.907757, 127.766922], 7);
+      map.value = L.map('map', { zoomControl: false }).setView([35.907757, 127.766922], 9);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map.value);
@@ -150,7 +150,7 @@ export default defineComponent({
 
 .leaflet-control-zoom {
   position: absolute;
-  bottom: 60px;
+  bottom: 100px;
   right: 16px;
   z-index: 1000;
 }
