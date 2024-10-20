@@ -169,9 +169,25 @@ export default defineComponent({
             const lat = parseFloat(data.y);
             const lon = parseFloat(data.x);
             if (!isNaN(lat) && !isNaN(lon)) {
-              map.value.setView([lat, lon], 14);
-              L.marker([lat, lon]).addTo(map.value)
-                .bindPopup(`<b>${data.address}</b>`)
+              map.value.setView([lat, lon], 16);
+              
+              const address = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
+              const fullAddress = data.buildingName ? `${address} (${data.buildingName})` : address;
+              
+              const customIcon = L.icon({
+                iconUrl: '/free-icon-font-location-crosshairs-9245169.png',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -32]
+              });
+              
+              L.marker([lat, lon], { icon: customIcon }).addTo(map.value)
+                .bindPopup(`
+                  <b>${fullAddress}</b><br>
+                  도로명주소: ${data.roadAddress}<br>
+                  지번주소: ${data.jibunAddress}<br>
+                  우편번호: ${data.zonecode}
+                `)
                 .openPopup();
             } else {
               errorMessage.value = '주소의 좌표를 찾을 수 없습니다.';
