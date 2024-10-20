@@ -1,13 +1,13 @@
 <template>
   <div>
     <div id="map" style="height: 100vh;"></div>
-    <v-btn
+    <v-btn-icon
       class="location-btn"
       color="primary"
       @click="getUserLocation"
     >
-      Get My Location
-    </v-btn>
+      <v-icon>mdi-crosshairs-gps</v-icon>
+    </v-btn-icon>
   </div>
 </template>
 
