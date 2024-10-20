@@ -17,6 +17,16 @@
       <div id="map"></div>
       <div class="sliding-sidebar" :class="{ 'expanded': expanded }">
         <h3>{{ selectedButton }}</h3>
+        <v-text-field
+          v-if="['위기탐색', '자원탐색'].includes(selectedButton)"
+          v-model="searchQuery"
+          label="장소, 버스, 지하철, 도로 검색"
+          prepend-inner-icon="mdi-magnify"
+          outlined
+          dense
+          class="search-bar"
+          @keyup.enter="handleSearch"
+        ></v-text-field>
         <!-- Add more detailed content here based on the selected button -->
       </div>
       <v-tooltip text="현재위치">
@@ -49,6 +59,7 @@ export default defineComponent({
     const userMarker = ref<L.Marker | null>(null);
     const expanded = ref(false);
     const selectedButton = ref('');
+    const searchQuery = ref('');
     const sidebarButtons = ref([
       { text: '위기탐색', icon: 'mdi-alert' },
       { text: '자원탐색', icon: 'mdi-magnify' },
@@ -132,10 +143,17 @@ export default defineComponent({
     const expandSidebar = (buttonText: string) => {
       expanded.value = !expanded.value;
       selectedButton.value = buttonText;
+      console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
+    };
+
+    const handleSearch = () => {
+      console.log('Search query:', searchQuery.value);
+      // Implement search functionality here
     };
 
     onMounted(() => {
       initMap();
+      console.log('Map component mounted');
     });
 
     return {
@@ -143,7 +161,9 @@ export default defineComponent({
       sidebarButtons,
       expanded,
       selectedButton,
-      expandSidebar
+      expandSidebar,
+      searchQuery,
+      handleSearch
     };
   }
 });
@@ -186,6 +206,7 @@ export default defineComponent({
   transition: left 0.3s ease;
   z-index: 1000;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .sliding-sidebar.expanded {
@@ -245,5 +266,22 @@ export default defineComponent({
 
 .leaflet-control-zoom a:hover {
   background-color: #f4f4f4;
+}
+
+.search-bar {
+  margin-top: 20px;
+}
+
+.search-bar :deep(.v-field__outline) {
+  border-color: #4CAF50 !important;
+}
+
+.search-bar :deep(.v-field__input) {
+  padding-left: 40px;
+}
+
+.search-bar :deep(.v-input__prepend-inner) {
+  margin-top: 8px;
+  margin-right: -30px;
 }
 </style>
