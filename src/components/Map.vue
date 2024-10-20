@@ -261,7 +261,7 @@ export default defineComponent({
 }
 
 .left-sidebar {
-  width: 80px;
+  width: 63px;
   height: 100vh;
   background-color: #f0f0f0;
   z-index: 1000;
@@ -297,9 +297,9 @@ export default defineComponent({
 
 .sidebar-btn {
   padding: 0 !important;
-  height: 80px !important;
-  width: 80px !important;
-  min-width: 80px !important;
+  height: 63px !important;
+  width: 63px !important;
+  min-width: 63px !important;
   margin-bottom: 0 !important;
   background-color: transparent !important;
   border: none !important;
@@ -313,8 +313,8 @@ export default defineComponent({
 }
 
 .sidebar-btn-icon {
-  width: 60px;
-  height: 60px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
