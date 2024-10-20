@@ -1,6 +1,7 @@
 <template>
   <div class="map-container">
-    <div id="map" style="height: 100vh;"></div>
+    <div class="sidebar"></div>
+    <div id="map"></div>
     <v-tooltip text="현재위치">
       <template v-slot:activator="{ props }">
         <v-btn
@@ -127,13 +128,26 @@ export default defineComponent({
 
 .map-container {
   position: relative;
+  display: flex;
   width: 100%;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 63px;
+  height: 100vh;
+  background-color: #f0f0f0;
+  z-index: 1000;
+}
+
+#map {
+  flex-grow: 1;
   height: 100vh;
 }
 
 .location-btn {
   position: absolute;
-  top: 80px;
+  bottom: 20px;
   right: 10px;
   z-index: 1000;
   background-color: white !important;
