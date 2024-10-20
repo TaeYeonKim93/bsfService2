@@ -1,9 +1,18 @@
 <template>
   <div class="map-container">
-    <v-navigation-drawer permanent class="sidebar">
+    <v-navigation-drawer
+      v-model="drawer"
+      :rail="!drawer"
+      permanent
+      @click="drawer = !drawer"
+      class="sidebar"
+    >
       <v-list>
         <v-list-item v-for="(button, index) in sidebarButtons" :key="index">
-          <v-btn block class="text-none sidebar-btn">{{ button }}</v-btn>
+          <v-btn block class="text-none sidebar-btn">
+            <v-icon>{{ button.icon }}</v-icon>
+            <span v-if="drawer">{{ button.text }}</span>
+          </v-btn>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -35,7 +44,13 @@ export default defineComponent({
   setup() {
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
-    const sidebarButtons = ref(['위기탐색', '자원탐색', '통계', '관리자 모드']);
+    const drawer = ref(false);
+    const sidebarButtons = ref([
+      { text: '위기탐색', icon: 'mdi-alert' },
+      { text: '자원탐색', icon: 'mdi-magnify' },
+      { text: '통계', icon: 'mdi-chart-bar' },
+      { text: '관리자 모드', icon: 'mdi-account-cog' }
+    ]);
 
     const initMap = () => {
       map.value = L.map('map', { zoomControl: false }).setView([37.4981, 127.0275], 10);
@@ -116,7 +131,8 @@ export default defineComponent({
 
     return {
       getUserLocation,
-      sidebarButtons
+      sidebarButtons,
+      drawer
     };
   }
 });
@@ -133,10 +149,10 @@ export default defineComponent({
 }
 
 .sidebar {
-  width: 80px;
   height: 100vh;
   z-index: 1000;
   background-color: #f0f0f0;
+  transition: width 0.3s ease;
 }
 
 .sidebar-btn {
@@ -144,15 +160,22 @@ export default defineComponent({
   padding: 8px 4px !important;
   height: auto !important;
   white-space: normal !important;
-  text-align: center !important;
+  text-align: left !important;
   margin-bottom: 8px !important;
   background-color: #ffffff !important;
   color: #333333 !important;
   border: 1px solid #dddddd !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
 }
 
 .sidebar-btn:hover {
   background-color: #e0e0e0 !important;
+}
+
+.sidebar-btn .v-icon {
+  margin-right: 8px;
 }
 
 #map {
