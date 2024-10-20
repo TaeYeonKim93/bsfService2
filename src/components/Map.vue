@@ -35,7 +35,7 @@ export default defineComponent({
   setup() {
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
-    const sidebarButtons = ref(['위기탐색', '자원탐색', '통계']);
+    const sidebarButtons = ref(['위기탐색', '자원탐색', '통계', '관리자 모드']);
 
     const initMap = () => {
       map.value = L.map('map', { zoomControl: false }).setView([37.4981, 127.0275], 10);
@@ -44,7 +44,6 @@ export default defineComponent({
         maxZoom: 19
       }).addTo(map.value);
 
-      // Add custom zoom control
       L.control.zoom({
         position: 'topright'
       }).addTo(map.value);
@@ -63,14 +62,12 @@ export default defineComponent({
         bounds.getEast()
       );
 
-      // Clear existing markers
       map.value.eachLayer((layer) => {
         if (layer instanceof L.Marker && layer !== userMarker.value) {
           map.value?.removeLayer(layer);
         }
       });
 
-      // Add new markers
       landmarks.forEach((landmark) => {
         const marker = L.marker([landmark.lat, landmark.lon]).addTo(map.value!);
         marker.bindPopup(`<b>${landmark.title}</b>`);
@@ -87,12 +84,10 @@ export default defineComponent({
         (position) => {
           const { latitude, longitude } = position.coords;
           if (map.value) {
-            // Remove existing user marker if any
             if (userMarker.value) {
               map.value.removeLayer(userMarker.value);
             }
 
-            // Create a new marker for user's location
             userMarker.value = L.marker([latitude, longitude], {
               icon: L.icon({
                 iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -105,11 +100,7 @@ export default defineComponent({
             }).addTo(map.value);
 
             userMarker.value.bindPopup('You are here').openPopup();
-
-            // Pan and zoom to user's location
             map.value.setView([latitude, longitude], 14);
-
-            // Update landmarks after moving to the user's location
             updateLandmarks();
           }
         },
@@ -142,17 +133,26 @@ export default defineComponent({
 }
 
 .sidebar {
-  width: 63px;
+  width: 80px;
   height: 100vh;
   z-index: 1000;
+  background-color: #f0f0f0;
 }
 
 .sidebar-btn {
   font-size: 12px !important;
-  padding: 4px !important;
+  padding: 8px 4px !important;
   height: auto !important;
   white-space: normal !important;
   text-align: center !important;
+  margin-bottom: 8px !important;
+  background-color: #ffffff !important;
+  color: #333333 !important;
+  border: 1px solid #dddddd !important;
+}
+
+.sidebar-btn:hover {
+  background-color: #e0e0e0 !important;
 }
 
 #map {
