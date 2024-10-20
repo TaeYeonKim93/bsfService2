@@ -152,21 +152,47 @@ export default defineComponent({
 
     const performSearch = () => {
       new window.daum.Postcode({
-        oncomplete: function(data: any) {
+        oncomplete: async function(data: any) {
           console.log(data);
           if (map.value) {
-            const lat = parseFloat(data.y);
-            const lon = parseFloat(data.x);
-            map.value.setView([lat, lon], 16);
-
-            // Remove previous search marker if exists
-            if (userMarker.value) {
-              map.value.removeLayer(userMarker.value);
+            let lat, lon;
+            
+            if (data.y && data.x) {
+              lat = parseFloat(data.y);
+              lon = parseFloat(data.x);
+            } else {
+              // If coordinates are not available, use the address to geocode
+              try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(data.address)}`);
+                const result = await response.json();
+                if (result && result.length > 0) {
+                  lat = parseFloat(result[0].lat);
+                  lon = parseFloat(result[0].lon);
+                } else {
+                  throw new Error('Geocoding failed');
+                }
+              } catch (error) {
+                console.error('Error geocoding address:', error);
+                alert('Unable to find the location on the map. Please try a different address.');
+                return;
+              }
             }
 
-            // Add a new marker for the searched location
-            userMarker.value = L.marker([lat, lon]).addTo(map.value);
-            userMarker.value.bindPopup(`<b>${data.address}</b>`).openPopup();
+            if (!isNaN(lat) && !isNaN(lon)) {
+              map.value.setView([lat, lon], 16);
+
+              // Remove previous search marker if exists
+              if (userMarker.value) {
+                map.value.removeLayer(userMarker.value);
+              }
+
+              // Add a new marker for the searched location
+              userMarker.value = L.marker([lat, lon]).addTo(map.value);
+              userMarker.value.bindPopup(`<b>${data.address}</b>`).openPopup();
+            } else {
+              console.error('Invalid coordinates:', lat, lon);
+              alert('Unable to locate the address on the map. Please try again.');
+            }
           }
         }
       }).open();
