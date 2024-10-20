@@ -1,13 +1,19 @@
 <template>
-  <div>
+  <div class="map-container">
     <div id="map" style="height: 100vh;"></div>
-    <v-btn-icon
-      class="location-btn"
-      color="primary"
-      @click="getUserLocation"
-    >
-      <v-icon>mdi-crosshairs-gps</v-icon>
-    </v-btn-icon>
+    <v-tooltip text="현재위치">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          icon
+          class="location-btn"
+          color="primary"
+          @click="getUserLocation"
+          v-bind="props"
+        >
+          <v-icon>mdi-crosshairs-gps</v-icon>
+        </v-btn>
+      </template>
+    </v-tooltip>
   </div>
 </template>
 
@@ -126,10 +132,14 @@ export default defineComponent({
 <style scoped>
 @import 'leaflet/dist/leaflet.css';
 
+.map-container {
+  position: relative;
+}
+
 .location-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  bottom: 16px;
+  right: 16px;
   z-index: 1000;
 }
 </style>
