@@ -26,6 +26,7 @@
           dense
           class="search-bar"
           @keyup.enter="handleSearch"
+          :loading="isLoading"
         ></v-text-field>
         <!-- Add more detailed content here based on the selected button -->
       </div>
@@ -51,6 +52,7 @@ import { defineComponent, onMounted, ref } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchLandmarks } from '../services/wikipediaService';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'Map',
@@ -60,6 +62,7 @@ export default defineComponent({
     const expanded = ref(false);
     const selectedButton = ref('');
     const searchQuery = ref('');
+    const isLoading = ref(false);
     const sidebarButtons = ref([
       { text: '위기탐색', icon: 'mdi-alert' },
       { text: '자원탐색', icon: 'mdi-magnify' },
@@ -146,9 +149,40 @@ export default defineComponent({
       console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
     };
 
+    const performSearch = async (query: string) => {
+      try {
+        isLoading.value = true;
+        const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
+        const results = response.data;
+        
+        // Clear previous search results
+        map.value?.eachLayer((layer) => {
+          if (layer instanceof L.Marker && layer !== userMarker.value) {
+            map.value?.removeLayer(layer);
+          }
+        });
+
+        results.forEach((result: any) => {
+          const marker = L.marker([result.lat, result.lon]).addTo(map.value!);
+          marker.bindPopup(`<b>${result.display_name}</b>`);
+        });
+
+        if (results.length > 0) {
+          map.value?.fitBounds(L.latLngBounds(results.map((result: any) => [result.lat, result.lon])));
+        } else {
+          alert('No results found');
+        }
+      } catch (error) {
+        console.error('Error performing search:', error);
+        alert('Error performing search. Please try again.');
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
     const handleSearch = () => {
       console.log('Search query:', searchQuery.value);
-      // Implement search functionality here
+      performSearch(searchQuery.value);
     };
 
     onMounted(() => {
@@ -163,7 +197,8 @@ export default defineComponent({
       selectedButton,
       expandSidebar,
       searchQuery,
-      handleSearch
+      handleSearch,
+      isLoading
     };
   }
 });
