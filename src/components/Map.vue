@@ -28,7 +28,6 @@
           @keyup.enter="handleSearch"
           :loading="isLoading"
         ></v-text-field>
-        <!-- Add more detailed content here based on the selected button -->
       </div>
       <v-tooltip text="현재위치">
         <template v-slot:activator="{ props }">
@@ -53,6 +52,18 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchLandmarks } from '../services/wikipediaService';
 import axios from 'axios';
+
+const mockSearchApi = async (query: string) => {
+  if (query.toLowerCase().includes('라피니엘') || query.toLowerCase().includes('rafiniel')) {
+    return [{
+      name: '라피니엘',
+      lat: 37.5665,
+      lon: 126.9780,
+      address: 'Seoul, South Korea'
+    }];
+  }
+  return [];
+};
 
 export default defineComponent({
   name: 'Map',
@@ -152,10 +163,8 @@ export default defineComponent({
     const performSearch = async (query: string) => {
       try {
         isLoading.value = true;
-        const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
-        const results = response.data;
+        const results = await mockSearchApi(query);
         
-        // Clear previous search results
         map.value?.eachLayer((layer) => {
           if (layer instanceof L.Marker && layer !== userMarker.value) {
             map.value?.removeLayer(layer);
@@ -164,7 +173,7 @@ export default defineComponent({
 
         results.forEach((result: any) => {
           const marker = L.marker([result.lat, result.lon]).addTo(map.value!);
-          marker.bindPopup(`<b>${result.display_name}</b>`);
+          marker.bindPopup(`<b>${result.name}</b><br>${result.address}`);
         });
 
         if (results.length > 0) {
