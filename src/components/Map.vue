@@ -54,6 +54,7 @@ import { fetchLandmarks } from '../services/wikipediaService';
 declare global {
   interface Window {
     daum: any;
+    kakao: any;
   }
 }
 
@@ -150,48 +151,50 @@ export default defineComponent({
       console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
     };
 
+    const getAddressCoords = (address: string) => {
+      return new Promise((resolve, reject) => {
+        const geocoder = new window.kakao.maps.services.Geocoder();
+        geocoder.addressSearch(address, (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            resolve({
+              lat: result[0].y,
+              lng: result[0].x
+            });
+          } else {
+            reject(status);
+          }
+        });
+      });
+    };
+
     const performSearch = () => {
       new window.daum.Postcode({
         oncomplete: async function(data: any) {
           console.log(data);
           if (map.value) {
-            let lat, lon;
-            
-            if (data.y && data.x) {
-              lat = parseFloat(data.y);
-              lon = parseFloat(data.x);
-            } else {
-              // If coordinates are not available, use the address to geocode
-              try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(data.address)}`);
-                const result = await response.json();
-                if (result && result.length > 0) {
-                  lat = parseFloat(result[0].lat);
-                  lon = parseFloat(result[0].lon);
-                } else {
-                  throw new Error('Geocoding failed');
+            try {
+              const coords = await getAddressCoords(data.address);
+              const lat = coords.lat;
+              const lon = coords.lng;
+
+              if (!isNaN(lat) && !isNaN(lon)) {
+                map.value.setView([lat, lon], 16);
+
+                // Remove previous search marker if exists
+                if (userMarker.value) {
+                  map.value.removeLayer(userMarker.value);
                 }
-              } catch (error) {
-                console.error('Error geocoding address:', error);
-                alert('Unable to find the location on the map. Please try a different address.');
-                return;
+
+                // Add a new marker for the searched location
+                userMarker.value = L.marker([lat, lon]).addTo(map.value);
+                userMarker.value.bindPopup(`<b>${data.address}</b>`).openPopup();
+              } else {
+                console.error('Invalid coordinates:', lat, lon);
+                alert('Unable to locate the address on the map. Please try again.');
               }
-            }
-
-            if (!isNaN(lat) && !isNaN(lon)) {
-              map.value.setView([lat, lon], 16);
-
-              // Remove previous search marker if exists
-              if (userMarker.value) {
-                map.value.removeLayer(userMarker.value);
-              }
-
-              // Add a new marker for the searched location
-              userMarker.value = L.marker([lat, lon]).addTo(map.value);
-              userMarker.value.bindPopup(`<b>${data.address}</b>`).openPopup();
-            } else {
-              console.error('Invalid coordinates:', lat, lon);
-              alert('Unable to locate the address on the map. Please try again.');
+            } catch (error) {
+              console.error('Error geocoding address:', error);
+              alert('Unable to find the location on the map. Please try a different address.');
             }
           }
         }
@@ -203,10 +206,21 @@ export default defineComponent({
       console.log('Map component mounted');
 
       // Load Daum Postcode script
-      const script = document.createElement('script');
-      script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-      script.async = true;
-      document.head.appendChild(script);
+      const postcodeScript = document.createElement('script');
+      postcodeScript.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+      postcodeScript.async = true;
+      document.head.appendChild(postcodeScript);
+
+      // Load Kakao Maps API script
+      const kakaoScript = document.createElement('script');
+      kakaoScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=0dcea486f580f014e17750c6dc3af271&libraries=services&autoload=false`;
+      kakaoScript.async = true;
+      document.head.appendChild(kakaoScript);
+      kakaoScript.onload = () => {
+        window.kakao.maps.load(() => {
+          console.log('Kakao Maps API loaded');
+        });
+      };
     });
 
     return {
@@ -215,7 +229,8 @@ export default defineComponent({
       expanded,
       selectedButton,
       expandSidebar,
-      performSearch
+      performSearch,
+      getAddressCoords
     };
   }
 });
