@@ -2,19 +2,28 @@
   <div class="map-container">
     <v-navigation-drawer
       v-model="drawer"
-      :rail="!drawer"
+      :rail="!expanded"
+      :width="expanded ? 390 : 63"
       permanent
-      @click="drawer = !drawer"
+      @click="toggleDrawer"
       class="sidebar"
     >
       <v-list>
         <v-list-item v-for="(button, index) in sidebarButtons" :key="index">
-          <v-btn block class="text-none sidebar-btn">
+          <v-btn
+            block
+            class="text-none sidebar-btn"
+            @click="expandSidebar(button.text)"
+          >
             <v-icon>{{ button.icon }}</v-icon>
-            <span v-if="drawer">{{ button.text }}</span>
+            <span v-if="expanded">{{ button.text }}</span>
           </v-btn>
         </v-list-item>
       </v-list>
+      <div v-if="expanded" class="expanded-content">
+        <h3>{{ selectedButton }}</h3>
+        <!-- Add more detailed content here based on the selected button -->
+      </div>
     </v-navigation-drawer>
     <div id="map"></div>
     <v-tooltip text="현재위치">
@@ -45,6 +54,8 @@ export default defineComponent({
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
     const drawer = ref(true);
+    const expanded = ref(false);
+    const selectedButton = ref('');
     const sidebarButtons = ref([
       { text: '위기탐색', icon: 'mdi-alert' },
       { text: '자원탐색', icon: 'mdi-magnify' },
@@ -125,6 +136,17 @@ export default defineComponent({
       );
     };
 
+    const toggleDrawer = () => {
+      if (!expanded.value) {
+        expanded.value = true;
+      }
+    };
+
+    const expandSidebar = (buttonText: string) => {
+      expanded.value = true;
+      selectedButton.value = buttonText;
+    };
+
     onMounted(() => {
       initMap();
     });
@@ -132,7 +154,11 @@ export default defineComponent({
     return {
       getUserLocation,
       sidebarButtons,
-      drawer
+      drawer,
+      expanded,
+      selectedButton,
+      toggleDrawer,
+      expandSidebar
     };
   }
 });
@@ -179,6 +205,10 @@ export default defineComponent({
 
 .sidebar-btn .v-icon {
   margin-right: 8px;
+}
+
+.expanded-content {
+  padding: 16px;
 }
 
 #map {
