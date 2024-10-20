@@ -44,7 +44,7 @@ export default defineComponent({
   setup() {
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
-    const drawer = ref(false);
+    const drawer = ref(true);
     const sidebarButtons = ref([
       { text: '위기탐색', icon: 'mdi-alert' },
       { text: '자원탐색', icon: 'mdi-magnify' },
@@ -153,6 +153,9 @@ export default defineComponent({
   z-index: 1000;
   background-color: #f0f0f0;
   transition: width 0.3s ease;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .sidebar-btn {
@@ -181,6 +184,7 @@ export default defineComponent({
 #map {
   flex-grow: 1;
   height: 100vh;
+  width: 100%;
 }
 
 .location-btn {
