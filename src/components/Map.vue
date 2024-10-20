@@ -31,7 +31,7 @@ export default defineComponent({
     const userMarker = ref<L.Marker | null>(null);
 
     const initMap = () => {
-      map.value = L.map('map', { zoomControl: false }).setView([37.4981, 127.0275], 14);
+      map.value = L.map('map', { zoomControl: false }).setView([37.4981, 127.0275], 10);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
