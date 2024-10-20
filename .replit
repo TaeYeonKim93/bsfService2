@@ -1,0 +1,51 @@
+modules = ["nodejs-20"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Vite Development Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Build and Start"
+
+[[workflows.workflow]]
+name = "Vite Development Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev -- --host 0.0.0.0"
+waitForPort = 5173
+
+[[workflows.workflow]]
+name = "Build and Start"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build && npm start"
+waitForPort = 8000
+
+[deployment]
+run = ["sh", "-c", "npm run dev -- --host 0.0.0.0"]
+
+[nix]
+channel = "stable-24_05"
+
+[[ports]]
+localPort = 5173
+externalPort = 80
