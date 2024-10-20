@@ -1,0 +1,136 @@
+import { defineComponent, onMounted, ref } from 'vue';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { fetchLandmarks } from '../services/wikipediaService';
+
+declare global {
+  interface Window {
+    daum: any;
+    kakao: any;
+  }
+}
+
+export default defineComponent({
+  name: 'Map',
+  setup() {
+    const map = ref<L.Map | null>(null);
+    const userMarker = ref<L.Marker | null>(null);
+    const expanded = ref(false);
+    const selectedButton = ref('');
+    const sidebarButtons = ref([
+      { text: '위기탐색', icon: 'mdi-alert' },
+      { text: '자원탐색', icon: 'mdi-magnify' },
+      { text: '통계', icon: 'mdi-chart-bar' },
+      { text: '관리자 모드', icon: 'mdi-account-cog' }
+    ]);
+
+    const initMap = () => {
+      // ... (기존 코드 유지)
+    };
+
+    const updateLandmarks = async () => {
+      // ... (기존 코드 유지)
+    };
+
+    const getUserLocation = () => {
+      // ... (기존 코드 유지)
+    };
+
+    const expandSidebar = (buttonText: string) => {
+      // ... (기존 코드 유지)
+    };
+
+    const loadKakaoMapsScript = (): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=0dcea486f580f014e17750c6dc3af271&libraries=services&autoload=false`;
+        script.async = true;
+        script.onload = () => {
+          window.kakao.maps.load(() => {
+            console.log('Kakao Maps API loaded');
+            resolve();
+          });
+        };
+        script.onerror = () => reject(new Error('Failed to load Kakao Maps API'));
+        document.head.appendChild(script);
+      });
+    };
+
+    const getAddressCoords = (address: string): Promise<{lat: number, lng: number}> => {
+      return new Promise((resolve, reject) => {
+        if (!window.kakao || !window.kakao.maps) {
+          reject(new Error('Kakao Maps API not loaded'));
+          return;
+        }
+        const geocoder = new window.kakao.maps.services.Geocoder();
+        geocoder.addressSearch(address, (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            resolve({
+              lat: parseFloat(result[0].y),
+              lng: parseFloat(result[0].x)
+            });
+          } else {
+            reject(new Error('Geocoding failed'));
+          }
+        });
+      });
+    };
+
+    const performSearch = async () => {
+      if (!window.daum) {
+        console.error('Daum Postcode script not loaded');
+        return;
+      }
+      
+      try {
+        await loadKakaoMapsScript();
+        
+        new window.daum.Postcode({
+          oncomplete: async function(data: any) {
+            console.log('Selected address:', data);
+            if (map.value) {
+              try {
+                const coords = await getAddressCoords(data.address);
+                console.log('Geocoded coordinates:', coords);
+                map.value.setView([coords.lat, coords.lng], 16);
+                
+                if (userMarker.value) {
+                  map.value.removeLayer(userMarker.value);
+                }
+                
+                userMarker.value = L.marker([coords.lat, coords.lng]).addTo(map.value);
+                userMarker.value.bindPopup(`<b>${data.address}</b>`).openPopup();
+              } catch (error) {
+                console.error('Error geocoding address:', error);
+                alert('주소를 지도에서 찾을 수 없습니다. 다른 주소를 시도해 주세요.');
+              }
+            }
+          }
+        }).open();
+      } catch (error) {
+        console.error('Failed to load Kakao Maps API:', error);
+        alert('지도 서비스를 로드하는 데 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      }
+    };
+
+    onMounted(async () => {
+      initMap();
+      console.log('Map component mounted');
+
+      // Load Daum Postcode script
+      const postcodeScript = document.createElement('script');
+      postcodeScript.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+      postcodeScript.async = true;
+      document.head.appendChild(postcodeScript);
+    });
+
+    return {
+      getUserLocation,
+      sidebarButtons,
+      expanded,
+      selectedButton,
+      expandSidebar,
+      performSearch
+    };
+  }
+});
