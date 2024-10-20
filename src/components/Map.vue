@@ -1,13 +1,6 @@
 <template>
-  <div class="map-container">
-    <v-navigation-drawer
-      v-model="drawer"
-      :rail="!expanded"
-      :width="expanded ? 390 : 63"
-      permanent
-      @click="toggleDrawer"
-      class="sidebar"
-    >
+  <div class="main-container">
+    <div class="left-header">
       <v-list>
         <v-list-item v-for="(button, index) in sidebarButtons" :key="index">
           <v-btn
@@ -16,29 +9,30 @@
             @click="expandSidebar(button.text)"
           >
             <v-icon>{{ button.icon }}</v-icon>
-            <span v-if="expanded">{{ button.text }}</span>
           </v-btn>
         </v-list-item>
       </v-list>
-      <div v-if="expanded" class="expanded-content">
+    </div>
+    <div class="right-content">
+      <div id="map"></div>
+      <div class="sliding-sidebar" :class="{ 'expanded': expanded }">
         <h3>{{ selectedButton }}</h3>
         <!-- Add more detailed content here based on the selected button -->
       </div>
-    </v-navigation-drawer>
-    <div id="map"></div>
-    <v-tooltip text="현재위치">
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon
-          class="location-btn"
-          color="primary"
-          @click="getUserLocation"
-          v-bind="props"
-        >
-          <img src="/free-icon-font-location-crosshairs-9245169.png" alt="Get Location" width="24" height="24" />
-        </v-btn>
-      </template>
-    </v-tooltip>
+      <v-tooltip text="현재위치">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            class="location-btn"
+            color="primary"
+            @click="getUserLocation"
+            v-bind="props"
+          >
+            <img src="/free-icon-font-location-crosshairs-9245169.png" alt="Get Location" width="24" height="24" />
+          </v-btn>
+        </template>
+      </v-tooltip>
+    </div>
   </div>
 </template>
 
@@ -53,7 +47,6 @@ export default defineComponent({
   setup() {
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
-    const drawer = ref(true);
     const expanded = ref(false);
     const selectedButton = ref('');
     const sidebarButtons = ref([
@@ -136,14 +129,8 @@ export default defineComponent({
       );
     };
 
-    const toggleDrawer = () => {
-      if (!expanded.value) {
-        expanded.value = true;
-      }
-    };
-
     const expandSidebar = (buttonText: string) => {
-      expanded.value = true;
+      expanded.value = !expanded.value;
       selectedButton.value = buttonText;
     };
 
@@ -154,10 +141,8 @@ export default defineComponent({
     return {
       getUserLocation,
       sidebarButtons,
-      drawer,
       expanded,
       selectedButton,
-      toggleDrawer,
       expandSidebar
     };
   }
@@ -167,21 +152,44 @@ export default defineComponent({
 <style scoped>
 @import 'leaflet/dist/leaflet.css';
 
-.map-container {
-  position: relative;
+.main-container {
   display: flex;
   width: 100%;
   height: 100vh;
 }
 
-.sidebar {
+.left-header {
+  width: 63px;
   height: 100vh;
-  z-index: 1000;
   background-color: #f0f0f0;
-  transition: width 0.3s ease;
+  z-index: 1000;
+}
+
+.right-content {
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.sliding-sidebar {
   position: absolute;
-  left: 0;
   top: 0;
+  left: -390px;
+  width: 390px;
+  height: 100%;
+  background-color: white;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sliding-sidebar.expanded {
+  left: 0;
 }
 
 .sidebar-btn {
@@ -189,14 +197,14 @@ export default defineComponent({
   padding: 8px 4px !important;
   height: auto !important;
   white-space: normal !important;
-  text-align: left !important;
+  text-align: center !important;
   margin-bottom: 8px !important;
   background-color: #ffffff !important;
   color: #333333 !important;
   border: 1px solid #dddddd !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
 }
 
 .sidebar-btn:hover {
@@ -204,17 +212,7 @@ export default defineComponent({
 }
 
 .sidebar-btn .v-icon {
-  margin-right: 8px;
-}
-
-.expanded-content {
-  padding: 16px;
-}
-
-#map {
-  flex-grow: 1;
-  height: 100vh;
-  width: 100%;
+  margin-right: 0;
 }
 
 .location-btn {
