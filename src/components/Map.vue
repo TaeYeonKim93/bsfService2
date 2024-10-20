@@ -15,12 +15,9 @@
     </div>
     <div class="right-content">
       <div id="map"></div>
-      <div class="sliding-sidebar" :class="{ 'expanded': expanded, 'wide': isWide }">
+      <div class="sliding-sidebar" :class="{ 'expanded': expanded }">
         <div class="sidebar-header">
           <h3>{{ selectedButton }}</h3>
-          <v-btn icon @click="toggleSidebarWidth">
-            <v-icon>{{ isWide ? 'mdi-chevron-left' : 'mdi-chevron-right' }}</v-icon>
-          </v-btn>
         </div>
         <v-btn
           v-if="['위기탐색', '자원탐색'].includes(selectedButton)"
@@ -68,7 +65,6 @@ export default defineComponent({
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
     const expanded = ref(false);
-    const isWide = ref(false);
     const selectedButton = ref('');
     const errorMessage = ref('');
     const sidebarButtons = ref([
@@ -152,13 +148,11 @@ export default defineComponent({
     };
 
     const expandSidebar = (buttonText: string) => {
-      expanded.value = !expanded.value;
+      if (!expanded.value) {
+        expanded.value = true;
+      }
       selectedButton.value = buttonText;
       console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
-    };
-
-    const toggleSidebarWidth = () => {
-      isWide.value = !isWide.value;
     };
 
     const openDaumPostcode = () => {
@@ -197,10 +191,8 @@ export default defineComponent({
       getUserLocation,
       sidebarButtons,
       expanded,
-      isWide,
       selectedButton,
       expandSidebar,
-      toggleSidebarWidth,
       errorMessage,
       openDaumPostcode
     };
@@ -242,7 +234,7 @@ export default defineComponent({
   width: 390px;
   height: 100%;
   background-color: white;
-  transition: left 0.3s ease, width 0.3s ease;
+  transition: left 0.3s ease;
   z-index: 1000;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -251,10 +243,6 @@ export default defineComponent({
 
 .sliding-sidebar.expanded {
   left: 0;
-}
-
-.sliding-sidebar.wide {
-  width: 780px;
 }
 
 .sidebar-header {
