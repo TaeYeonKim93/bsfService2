@@ -30,9 +30,14 @@ export default defineComponent({
     const userMarker = ref<L.Marker | null>(null);
 
     const initMap = () => {
-      map.value = L.map('map').setView([0, 0], 2);
+      map.value = L.map('map', { zoomControl: false }).setView([35.907757, 127.766922], 7);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map.value);
+
+      // Add custom zoom control
+      L.control.zoom({
+        position: 'bottomright'
       }).addTo(map.value);
 
       map.value.on('moveend', updateLandmarks);
@@ -139,6 +144,13 @@ export default defineComponent({
 .location-btn {
   position: absolute;
   bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+
+.leaflet-control-zoom {
+  position: absolute;
+  bottom: 60px;
   right: 16px;
   z-index: 1000;
 }
