@@ -1,12 +1,12 @@
 <template>
   <div class="main-container">
-    <div class="left-header">
+    <div class="left-sidebar">
       <v-list>
         <v-list-item v-for="(button, index) in sidebarButtons" :key="index">
           <v-btn
             block
             class="text-none sidebar-btn"
-            @click="expandSidebar(button.text)"
+            @click="handleButtonClick(button.text)"
           >
             <v-icon>{{ button.icon }}</v-icon>
           </v-btn>
@@ -15,30 +15,22 @@
     </div>
     <div class="right-content">
       <div id="map"></div>
-      <div class="sliding-sidebar" :class="{ 'expanded': expanded, 'wide': isWide }">
-        <div class="sidebar-header">
-          <h3>{{ selectedButton }}</h3>
-          <v-btn icon @click="toggleSidebarWidth">
-            <v-icon>{{ isWide ? 'mdi-chevron-left' : 'mdi-chevron-right' }}</v-icon>
-          </v-btn>
-        </div>
-        <v-btn
-          v-if="['위기탐색', '자원탐색'].includes(selectedButton)"
-          @click="openDaumPostcode"
-          color="primary"
-          class="mb-4"
-        >
-          주소 검색
-        </v-btn>
-        <v-alert
-          v-if="errorMessage"
-          type="error"
-          dismissible
-          @input="errorMessage = ''"
-        >
-          {{ errorMessage }}
-        </v-alert>
-      </div>
+      <v-btn
+        v-if="['위기탐색', '자원탐색'].includes(selectedButton)"
+        @click="openDaumPostcode"
+        color="primary"
+        class="search-btn"
+      >
+        주소 검색
+      </v-btn>
+      <v-alert
+        v-if="errorMessage"
+        type="error"
+        dismissible
+        @input="errorMessage = ''"
+      >
+        {{ errorMessage }}
+      </v-alert>
       <v-tooltip text="현재위치">
         <template v-slot:activator="{ props }">
           <v-btn
@@ -67,8 +59,6 @@ export default defineComponent({
   setup() {
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
-    const expanded = ref(false);
-    const isWide = ref(false);
     const selectedButton = ref('');
     const errorMessage = ref('');
     const sidebarButtons = ref([
@@ -151,45 +141,28 @@ export default defineComponent({
       );
     };
 
-    const expandSidebar = (buttonText: string) => {
-      expanded.value = !expanded.value;
+    const handleButtonClick = (buttonText: string) => {
       selectedButton.value = buttonText;
-      console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
-    };
-
-    const toggleSidebarWidth = () => {
-      isWide.value = !isWide.value;
+      console.log(`Selected button: ${selectedButton.value}`);
     };
 
     const openDaumPostcode = () => {
       new (window as any).daum.Postcode({
         oncomplete: function(data: any) {
-          console.log(data);
+          console.log(data); // Log the search result to the console
           if (map.value) {
             const lat = parseFloat(data.y);
             const lon = parseFloat(data.x);
             if (!isNaN(lat) && !isNaN(lon)) {
-              map.value.setView([lat, lon], 16);
+              map.value.setView([lat, lon], 16); // Zoom in on the location
               
               const address = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
               const fullAddress = data.buildingName ? `${address} (${data.buildingName})` : address;
               
-              const customIcon = L.icon({
-                iconUrl: '/free-icon-font-location-crosshairs-9245169.png',
-                iconSize: [32, 32],
-                iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
-              });
-              
-              L.marker([lat, lon], { icon: customIcon }).addTo(map.value)
-                .bindPopup(`
-                  <b>${fullAddress}</b><br>
-                  도로명주소: ${data.roadAddress}<br>
-                  지번주소: ${data.jibunAddress}<br>
-                  우편번호: ${data.zonecode}
-                `)
-                .openPopup();
+              const marker = L.marker([lat, lon]).addTo(map.value);
+              marker.bindPopup(fullAddress).openPopup();
             } else {
+              console.error('Invalid coordinates');
               errorMessage.value = '주소의 좌표를 찾을 수 없습니다.';
             }
           }
@@ -212,11 +185,8 @@ export default defineComponent({
     return {
       getUserLocation,
       sidebarButtons,
-      expanded,
-      isWide,
       selectedButton,
-      expandSidebar,
-      toggleSidebarWidth,
+      handleButtonClick,
       errorMessage,
       openDaumPostcode
     };
@@ -233,7 +203,7 @@ export default defineComponent({
   height: 100vh;
 }
 
-.left-header {
+.left-sidebar {
   width: 63px;
   height: 100vh;
   background-color: #f0f0f0;
@@ -249,35 +219,6 @@ export default defineComponent({
 #map {
   width: 100%;
   height: 100%;
-}
-
-.sliding-sidebar {
-  position: absolute;
-  top: 0;
-  left: -390px;
-  width: 390px;
-  height: 100%;
-  background-color: white;
-  transition: left 0.3s ease, width 0.3s ease;
-  z-index: 1000;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.sliding-sidebar.expanded {
-  left: 0;
-}
-
-.sliding-sidebar.wide {
-  width: 780px;
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
 }
 
 .sidebar-btn {
@@ -315,6 +256,13 @@ export default defineComponent({
 
 .location-btn:hover {
   background-color: #f0f0f0 !important;
+}
+
+.search-btn {
+  position: absolute;
+  top: 10px;
+  left: 73px;
+  z-index: 1000;
 }
 
 .leaflet-control-zoom {
