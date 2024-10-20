@@ -17,17 +17,15 @@
       <div id="map"></div>
       <div class="sliding-sidebar" :class="{ 'expanded': expanded }">
         <h3>{{ selectedButton }}</h3>
-        <v-text-field
+        <v-btn
           v-if="['위기탐색', '자원탐색'].includes(selectedButton)"
-          v-model="searchQuery"
-          label="장소, 버스, 지하철, 도로 검색"
-          prepend-inner-icon="mdi-magnify"
-          outlined
-          dense
-          class="search-bar"
-          @keyup.enter="handleSearch"
-          :loading="isLoading"
-        ></v-text-field>
+          @click="performSearch"
+          color="primary"
+          block
+          class="mb-4"
+        >
+          주소 검색
+        </v-btn>
         <!-- Add more detailed content here based on the selected button -->
       </div>
       <v-tooltip text="현재위치">
@@ -52,7 +50,12 @@ import { defineComponent, onMounted, ref } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchLandmarks } from '../services/wikipediaService';
-import axios from 'axios';
+
+declare global {
+  interface Window {
+    daum: any;
+  }
+}
 
 export default defineComponent({
   name: 'Map',
@@ -61,8 +64,6 @@ export default defineComponent({
     const userMarker = ref<L.Marker | null>(null);
     const expanded = ref(false);
     const selectedButton = ref('');
-    const searchQuery = ref('');
-    const isLoading = ref(false);
     const sidebarButtons = ref([
       { text: '위기탐색', icon: 'mdi-alert' },
       { text: '자원탐색', icon: 'mdi-magnify' },
@@ -149,45 +150,37 @@ export default defineComponent({
       console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
     };
 
-    const performSearch = async (query: string) => {
-      try {
-        isLoading.value = true;
-        const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
-        const results = response.data;
-        
-        // Clear previous search results
-        map.value?.eachLayer((layer) => {
-          if (layer instanceof L.Marker && layer !== userMarker.value) {
-            map.value?.removeLayer(layer);
+    const performSearch = () => {
+      new window.daum.Postcode({
+        oncomplete: function(data: any) {
+          console.log(data);
+          if (map.value) {
+            const lat = parseFloat(data.y);
+            const lon = parseFloat(data.x);
+            map.value.setView([lat, lon], 16);
+
+            // Remove previous search marker if exists
+            if (userMarker.value) {
+              map.value.removeLayer(userMarker.value);
+            }
+
+            // Add a new marker for the searched location
+            userMarker.value = L.marker([lat, lon]).addTo(map.value);
+            userMarker.value.bindPopup(`<b>${data.address}</b>`).openPopup();
           }
-        });
-
-        results.forEach((result: any) => {
-          const marker = L.marker([result.lat, result.lon]).addTo(map.value!);
-          marker.bindPopup(`<b>${result.display_name}</b>`);
-        });
-
-        if (results.length > 0) {
-          map.value?.fitBounds(L.latLngBounds(results.map((result: any) => [result.lat, result.lon])));
-        } else {
-          alert('No results found');
         }
-      } catch (error) {
-        console.error('Error performing search:', error);
-        alert('Error performing search. Please try again.');
-      } finally {
-        isLoading.value = false;
-      }
-    };
-
-    const handleSearch = () => {
-      console.log('Search query:', searchQuery.value);
-      performSearch(searchQuery.value);
+      }).open();
     };
 
     onMounted(() => {
       initMap();
       console.log('Map component mounted');
+
+      // Load Daum Postcode script
+      const script = document.createElement('script');
+      script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+      script.async = true;
+      document.head.appendChild(script);
     });
 
     return {
@@ -196,9 +189,7 @@ export default defineComponent({
       expanded,
       selectedButton,
       expandSidebar,
-      searchQuery,
-      handleSearch,
-      isLoading
+      performSearch
     };
   }
 });
@@ -301,22 +292,5 @@ export default defineComponent({
 
 .leaflet-control-zoom a:hover {
   background-color: #f4f4f4;
-}
-
-.search-bar {
-  margin-top: 20px;
-}
-
-.search-bar :deep(.v-field__outline) {
-  border-color: #4CAF50 !important;
-}
-
-.search-bar :deep(.v-field__input) {
-  padding-left: 40px;
-}
-
-.search-bar :deep(.v-input__prepend-inner) {
-  margin-top: 8px;
-  margin-right: -30px;
 }
 </style>
