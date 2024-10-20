@@ -37,7 +37,7 @@ export default defineComponent({
 
       // Add custom zoom control
       L.control.zoom({
-        position: 'bottomright'
+        position: 'topright'
       }).addTo(map.value);
 
       map.value.on('moveend', updateLandmarks);
@@ -143,15 +143,29 @@ export default defineComponent({
 
 .location-btn {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
+  top: 80px;
+  right: 10px;
   z-index: 1000;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
 }
 
 .leaflet-control-zoom {
   position: absolute;
-  bottom: 100px;
-  right: 16px;
+  top: 10px;
+  right: 10px;
   z-index: 1000;
+}
+
+.leaflet-control-zoom a {
+  background-color: white;
+  color: #333;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #f4f4f4;
 }
 </style>
