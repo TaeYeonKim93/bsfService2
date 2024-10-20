@@ -1,21 +1,21 @@
 <template>
   <div class="main-container">
-    <div class="left-header">
+    <div class="left-sidebar">
       <v-list>
         <v-list-item v-for="(button, index) in sidebarButtons" :key="index">
           <v-btn
             block
             class="text-none sidebar-btn"
-            @click="expandSidebar(button.text)"
+            @click="selectButton(button.text)"
           >
-            <v-icon>{{ button.icon }}</v-icon>
+            <img :src="button.icon" :alt="button.text" class="sidebar-btn-icon" />
           </v-btn>
         </v-list-item>
       </v-list>
     </div>
     <div class="right-content">
       <div id="map"></div>
-      <div class="sliding-sidebar" :class="{ 'expanded': expanded }">
+      <div class="content-sidebar" :class="{ 'expanded': expanded }">
         <h3>{{ selectedButton }}</h3>
         <v-btn
           v-if="['위기탐색', '자원탐색'].includes(selectedButton)"
@@ -50,6 +50,10 @@ import { defineComponent, onMounted, ref } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchLandmarks } from '../services/wikipediaService';
+import 위기탐색Icon from '/위기탐색.png'
+import 자원탐색Icon from '/자원탐색.png'
+import 통계Icon from '/통계내용.png'
+import 관리Icon from '/관리.png'
 
 declare global {
   interface Window {
@@ -66,10 +70,10 @@ export default defineComponent({
     const expanded = ref(false);
     const selectedButton = ref('');
     const sidebarButtons = ref([
-      { text: '위기탐색', icon: 'mdi-alert' },
-      { text: '자원탐색', icon: 'mdi-magnify' },
-      { text: '통계', icon: 'mdi-chart-bar' },
-      { text: '관리자 모드', icon: 'mdi-account-cog' }
+      { text: '위기탐색', icon: 위기탐색Icon },
+      { text: '자원탐색', icon: 자원탐색Icon },
+      { text: '통계', icon: 통계Icon },
+      { text: '관리자 모드', icon: 관리Icon }
     ]);
 
     const initMap = () => {
@@ -145,10 +149,10 @@ export default defineComponent({
       );
     };
 
-    const expandSidebar = (buttonText: string) => {
-      expanded.value = !expanded.value;
+    const selectButton = (buttonText: string) => {
       selectedButton.value = buttonText;
-      console.log(`Sidebar expanded: ${expanded.value}, Selected button: ${selectedButton.value}`);
+      expanded.value = true;
+      console.log(`Selected button: ${selectedButton.value}`);
     };
 
     const loadKakaoMapsScript = (): Promise<void> => {
@@ -240,7 +244,7 @@ export default defineComponent({
       sidebarButtons,
       expanded,
       selectedButton,
-      expandSidebar,
+      selectButton,
       performSearch
     };
   }
@@ -256,51 +260,49 @@ export default defineComponent({
   height: 100vh;
 }
 
-.left-header {
-  width: 63px;
+.left-sidebar {
+  width: 80px;
   height: 100vh;
   background-color: #f0f0f0;
   z-index: 1000;
+  padding: 0;
 }
 
 .right-content {
   flex-grow: 1;
   position: relative;
   overflow: hidden;
+  display: flex;
 }
 
 #map {
-  width: 100%;
+  flex-grow: 1;
   height: 100%;
 }
 
-.sliding-sidebar {
-  position: absolute;
-  top: 0;
-  left: -390px;
-  width: 390px;
+.content-sidebar {
+  width: 0;
   height: 100%;
   background-color: white;
-  transition: left 0.3s ease;
-  z-index: 1000;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  box-sizing: border-box;
 }
 
-.sliding-sidebar.expanded {
-  left: 0;
+.content-sidebar.expanded {
+  width: 300px;
 }
 
 .sidebar-btn {
-  font-size: 12px !important;
-  padding: 8px 4px !important;
-  height: auto !important;
-  white-space: normal !important;
-  text-align: center !important;
-  margin-bottom: 8px !important;
-  background-color: #ffffff !important;
-  color: #333333 !important;
-  border: 1px solid #dddddd !important;
+  padding: 0 !important;
+  height: 80px !important;
+  width: 80px !important;
+  min-width: 80px !important;
+  margin-bottom: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -310,8 +312,10 @@ export default defineComponent({
   background-color: #e0e0e0 !important;
 }
 
-.sidebar-btn .v-icon {
-  margin-right: 0;
+.sidebar-btn-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 
 .location-btn {
