@@ -5,7 +5,6 @@ export interface Landmark {
   title: string;
   lat: number;
   lon: number;
-  description: string;
   wikipediaUrl: string;
 }
 
@@ -19,7 +18,7 @@ export async function fetchLandmarks(south: number, west: number, north: number,
         list: 'geosearch',
         gscoord: `${(north + south) / 2}|${(east + west) / 2}`,
         gsradius: 10000,
-        gslimit: 10,
+        gslimit: 5,
         format: 'json',
         origin: '*',
       },
@@ -30,28 +29,8 @@ export async function fetchLandmarks(south: number, west: number, north: number,
       title: item.title,
       lat: item.lat,
       lon: item.lon,
-      description: '',
       wikipediaUrl: `https://en.wikipedia.org/?curid=${item.pageid}`,
     }));
-
-    // Fetch descriptions for each landmark
-    await Promise.all(
-      landmarks.map(async (landmark) => {
-        const descriptionResponse = await axios.get(WIKIPEDIA_API_URL, {
-          params: {
-            action: 'query',
-            pageids: landmark.pageid,
-            prop: 'extracts',
-            exintro: true,
-            explaintext: true,
-            format: 'json',
-            origin: '*',
-          },
-        });
-
-        landmark.description = descriptionResponse.data.query.pages[landmark.pageid].extract.slice(0, 200) + '...';
-      })
-    );
 
     return landmarks;
   } catch (error) {

@@ -30,7 +30,7 @@ export default defineComponent({
     const userMarker = ref<L.Marker | null>(null);
 
     const initMap = () => {
-      map.value = L.map('map', { zoomControl: false }).setView([35.907757, 127.766922], 9);
+      map.value = L.map('map', { zoomControl: false }).setView([37.4981, 127.0275], 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map.value);
@@ -64,7 +64,7 @@ export default defineComponent({
       // Add new markers
       landmarks.forEach((landmark) => {
         const marker = L.marker([landmark.lat, landmark.lon]).addTo(map.value!);
-        marker.bindPopup(`<b>${landmark.title}</b><br>${landmark.description}`);
+        marker.bindPopup(`<b>${landmark.title}</b>`);
       });
     };
 
@@ -98,27 +98,14 @@ export default defineComponent({
             userMarker.value.bindPopup('You are here').openPopup();
 
             // Pan and zoom to user's location
-            map.value.setView([latitude, longitude], 13);
+            map.value.setView([latitude, longitude], 14);
 
             // Update landmarks after moving to the user's location
             updateLandmarks();
           }
         },
         (error) => {
-          switch(error.code) {
-            case error.PERMISSION_DENIED:
-              alert("User denied the request for Geolocation.");
-              break;
-            case error.POSITION_UNAVAILABLE:
-              alert("Location information is unavailable.");
-              break;
-            case error.TIMEOUT:
-              alert("The request to get user location timed out.");
-              break;
-            default:
-              alert("An unknown error occurred.");
-              break;
-          }
+          alert("Error: " + error.message);
         }
       );
     };
@@ -150,7 +137,7 @@ export default defineComponent({
   z-index: 1000;
   background-color: white !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-  border-radius: 4px !important;
+  border-radius: 50% !important;
 }
 
 .location-btn:hover {
