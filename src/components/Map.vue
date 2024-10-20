@@ -1,6 +1,25 @@
 <template>
   <div class="map-container">
-    <div class="sidebar"></div>
+    <v-navigation-drawer
+      permanent
+      class="sidebar"
+    >
+      <v-list>
+        <v-list-item
+          v-for="(layer, index) in mapLayers"
+          :key="index"
+          @click="changeMapLayer(layer.type)"
+        >
+          <v-btn
+            :color="currentLayer === layer.type ? 'primary' : ''"
+            block
+            class="text-none"
+          >
+            {{ layer.name }}
+          </v-btn>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <div id="map"></div>
     <v-tooltip text="현재위치">
       <template v-slot:activator="{ props }">
@@ -29,13 +48,16 @@ export default defineComponent({
   setup() {
     const map = ref<L.Map | null>(null);
     const userMarker = ref<L.Marker | null>(null);
+    const currentLayer = ref('streets');
+    const mapLayers = [
+      { name: 'Streets', type: 'streets' },
+      { name: 'Satellite', type: 'satellite' },
+      { name: 'Terrain', type: 'terrain' },
+    ];
 
     const initMap = () => {
       map.value = L.map('map', { zoomControl: false }).setView([37.4981, 127.0275], 10);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
-      }).addTo(map.value);
+      setMapLayer(currentLayer.value);
 
       // Add custom zoom control
       L.control.zoom({
@@ -43,6 +65,41 @@ export default defineComponent({
       }).addTo(map.value);
 
       map.value.on('moveend', updateLandmarks);
+    };
+
+    const setMapLayer = (layerType: string) => {
+      if (!map.value) return;
+
+      // Remove existing tile layer
+      map.value.eachLayer((layer) => {
+        if (layer instanceof L.TileLayer) {
+          map.value?.removeLayer(layer);
+        }
+      });
+
+      // Add new tile layer based on selected type
+      switch (layerType) {
+        case 'satellite':
+          L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          }).addTo(map.value);
+          break;
+        case 'terrain':
+          L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+          }).addTo(map.value);
+          break;
+        default:
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+          }).addTo(map.value);
+      }
+    };
+
+    const changeMapLayer = (layerType: string) => {
+      currentLayer.value = layerType;
+      setMapLayer(layerType);
     };
 
     const updateLandmarks = async () => {
@@ -117,7 +174,10 @@ export default defineComponent({
     });
 
     return {
-      getUserLocation
+      getUserLocation,
+      mapLayers,
+      currentLayer,
+      changeMapLayer
     };
   }
 });
@@ -134,9 +194,8 @@ export default defineComponent({
 }
 
 .sidebar {
-  width: 63px;
+  width: 200px;
   height: 100vh;
-  background-color: #f0f0f0;
   z-index: 1000;
 }
 
