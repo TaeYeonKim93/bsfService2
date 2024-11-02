@@ -1,0 +1,53 @@
+version: '3'
+services:
+  admin-page:
+    build:
+      context: ./admin_page
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./admin_page/data:/app/data
+    environment:
+      - STREAMLIT_SERVER_PORT=5000
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+
+  frontend:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/app/src  # 프론트엔드 소스코드 마운트
+      - ./public:/app/public  # public 디렉토리 마운트 추가
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app  # 백엔드 소스코드 마운트
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      chromadb:
+        condition: service_healthy
+
+  chromadb:
+    image: ghcr.io/chroma-core/chroma:latest
+    ports:
+      - "8001:8000"
+    environment:
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
+    volumes:
+      - chroma_data:/chroma/chroma
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  chroma_data:

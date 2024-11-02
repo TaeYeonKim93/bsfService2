@@ -1,0 +1,24 @@
+[server]
+headless = true
+address = "0.0.0.0"
+port = 5000
+enableXsrfProtection = false
+enableCORS = false
+
+[browser]
+gatherUsageStats = false
+
+[global]
+developmentMode = false
+
+[theme]
+primaryColor = "#FF4B4B"
+backgroundColor = "#F0F2F6"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1F1F1F"
+
+[client]
+# Set UTF-8 encoding for proper Korean character support
+toolbarMode = "minimal"
+showErrorDetails = false
+caching = true
