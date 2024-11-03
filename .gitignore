@@ -70,3 +70,7 @@ Thumbs.db
 # 데이터 파일
 /backend/data/*.xlsx
 /backend/data/*.csv
+
+# SSL 인증서
+*.key
+*.crt

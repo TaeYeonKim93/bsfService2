@@ -18,7 +18,6 @@ secondaryBackgroundColor = "#FFFFFF"
 textColor = "#1F1F1F"
 
 [client]
-# Set UTF-8 encoding for proper Korean character support
 toolbarMode = "minimal"
 showErrorDetails = false
 caching = true

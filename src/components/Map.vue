@@ -158,18 +158,7 @@ export default defineComponent({
     const userMarker = ref<L.Marker | null>(null);
     const expanded = ref(false);
     const selectedButton = ref('');
-    
-    // HTTPS 프로토콜 사용
-    const adminUrl = 'https://' + window.location.hostname + ':5000';
-    
-    // CORS 설정 추가
-    const fetchOptions = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    };
-
+    const adminUrl = window.location.origin + '/admin/';
     const sidebarButtons = ref([
       { text: '위기탐색', icon: 위기탐색Icon },
       { text: '자원탐색', icon: 자원탐색Icon },
@@ -282,30 +271,121 @@ export default defineComponent({
 
     // 3. 지도 초기화 함수
     const initMap = async () => {
-      try {
-        if (!map.value) {
-          map.value = L.map('map', { 
-            zoomControl: false,
-            // HTTPS 타일 서버 사용
-            https: true
-          }).setView([36.5, 127.5], 7);
+      map.value = L.map('map', { zoomControl: false }).setView([36.5, 127.5], 7);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+      }).addTo(map.value);
+
+      L.control.zoom({
+        position: 'topright'
+      }).addTo(map.value);
+
+      // CSV 데이터 로드 및 표시
+      const csvData = await loadCsvData();
+      
+      const createCircleIcon = (color: string) => {
+        return L.divIcon({
+          className: 'custom-circle-marker',
+          html: `
+            <div class="circle" style="background-color: ${color};"></div>
+          `,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -10]
+        });
+      };
+
+      csvData.forEach((location: any) => {
+        try {
+          const lat = parseFloat(location.Longitude);
+          const lng = parseFloat(location.Latitude);
           
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19,
-            // CORS 설정 추가
-            crossOrigin: true
-          }).addTo(map.value);
+          L.marker([lat, lng], {
+            icon: createCircleIcon(location.color)
+          }).addTo(map.value!)
+          .bindPopup(`
+            <div style="
+              font-family: 'Noto Sans KR', sans-serif;
+              padding: 5px;
+              text-align: center;
+            ">
+              <strong>${location.Sido} ${location.Sigungu}</strong><br>
+              <span style="
+                color: ${location.color};
+                text-shadow: 
+                1px 1px 3px #000
+            ">
+                위험도: ${location.Result.toFixed(1)}%
+              </span>
+            </div>
+          `);
+
+        } catch (error) {
+          console.error('데이터 처리 중 오류:', error, location);
         }
-      } catch (error) {
-        console.error('지도 초기화 오류:', error);
-      }
+      });
+
+      // CSS 스타일
+      const style = document.createElement('style');
+      style.textContent = `
+        .custom-circle-marker {
+          background: none !important;
+        }
+        .circle {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          border: 2px solid white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+      `;
+      document.head.appendChild(style);
+
+      // 범례 추가
+      const legend = L.control({ position: 'topright' });
+
+      legend.onAdd = () => {
+        const div = L.DomUtil.create('div', 'info legend');
+        div.style.backgroundColor = 'white';
+        div.style.padding = '10px';
+        div.style.borderRadius = '5px';
+        div.style.boxShadow = '0 1px 5px rgba(0,0,0,0.2)';
+        div.style.fontSize = '12px';
+        div.style.marginTop = '10px';
+
+        const grades = [0, 20, 40, 60, 80];
+        const labels = ['매우 낮음', '낮음', '중간', '높음', '매우 높음'];
+
+        div.innerHTML = '<div style="margin-bottom: 5px;"><strong>위험도</strong></div>';
+
+        for (let i = 0; i < grades.length; i++) {
+          div.innerHTML += `
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+              <div style="
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background-color: ${getRiskColor(grades[i])};
+                border: 1px solid white;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                margin-right: 8px;
+              "></div>
+              <span>${labels[i]}</span>
+            </div>
+          `;
+        }
+
+        return div;
+      };
+
+      legend.addTo(map.value!);
     };
 
     const getRiskLevel = (normalizedResult: number) => {
       if (normalizedResult >= 80) return '매우 높음';
       if (normalizedResult >= 60) return '높음';
-      if (normalizedResult >= 40) return '중간';
+      if (normalizedResult >= 40) return '중��';
       if (normalizedResult >= 20) return '낮음';
       return '매우 낮음';
     };
@@ -334,7 +414,7 @@ export default defineComponent({
 
     const getUserLocation = () => {
       if (!navigator.geolocation) {
-        alert('브라우저가 위치 정보를 지원하지 않습니다');
+        alert('브라우저가 위치 정보를 원하지 않습니다');
         return;
       }
 
@@ -419,7 +499,7 @@ export default defineComponent({
                   const gu = result[0].region_3depth_name;
                   
                   // 전체 결과 로깅
-                  console.log('카오 지도 API 전 응답:', result);
+                  console.log('카카오 지도 API 전 응답:', result);
                   
                   // 행정동 기준 값 사용 (result[0])
                   const fullSigungu = sigungu + ' ' + gu;           // "수원시 권선구"
@@ -577,8 +657,81 @@ export default defineComponent({
           }
           break;
         case '자원탐색':
-          const resourceData = await loadResourceData();
-          sidebarData.value = resourceData;
+          if (userMarker.value) {
+            const position = userMarker.value.getLatLng();
+            const geocoder = new window.kakao.maps.services.Geocoder();
+            
+            geocoder.coord2RegionCode(position.lng, position.lat, (result: any, status: any) => {
+              if (status === window.kakao.maps.services.Status.OK) {
+                const sido = result[0].region_1depth_name;
+                const sigungu = result[0].region_2depth_name;
+                
+                fetch('/bokjiro_content.json')
+                  .then(response => response.json())
+                  .then(data => {
+                    const localResources = data
+                      .filter((item: any) => {
+                        // 복지자원 치 정규화
+                        const itemLocation = normalizeLocation({
+                          sido: item.sido,
+                          sigungu: item.gu
+                        });
+
+                        // 검색 위치 정규화
+                        const searchLocation = normalizeLocation({
+                          sido: sido,
+                          sigungu: sigungu
+                        });
+
+                        // 시도 레벨 매칭
+                        const sidoMatch = itemLocation.sido === searchLocation.sido;
+                        
+                        // 시군구 레벨 매칭 (시 전체 데이터도 포함)
+                        const sigunguMatch = !item.gu || // 시 전체 데이터
+                          item.gu.includes(sigungu.split(' ')[0]); // 시군구 첫 단어로 매칭
+
+                        return sidoMatch && (sigunguMatch || !item.gu);
+                      })
+                      .sort((a, b) => {
+                        // 1. 현 시군구와 정확히 일치하는 항목 우선
+                        const exactSigunguMatch = (item: any) => 
+                          item.gu && item.gu.includes(sigungu.split(' ')[0]);
+                        const aExactMatch = exactSigunguMatch(a);
+                        const bExactMatch = exactSigunguMatch(b);
+                        
+                        if (aExactMatch && !bExactMatch) return -1;
+                        if (!aExactMatch && bExactMatch) return 1;
+
+                        // 2. 구체적인 지역 정보가 있는 항목 우선
+                        if (a.gu && !b.gu) return -1;
+                        if (!a.gu && b.gu) return 1;
+
+                        // 3. 제목 기준 가나다순
+                        return a.title.localeCompare(b.title, 'ko-KR');
+                      });
+
+                    sidebarData.value = localResources.map((resource: any) => ({
+                      title: resource.title,
+                      description: `${resource.sido} ${resource.gu || '전체'}\n${resource.target ? `지원대상: ${resource.target}\n` : ''}${resource.content ? `지원내용: ${resource.content}` : ''}`
+                    }));
+
+                    if (sidebarData.value.length === 0) {
+                      sidebarData.value = [{
+                        title: '검색 결과 없음',
+                        description: '해당 지역의 등록된 복지자원이 없습니다.'
+                      }];
+                    }
+                  })
+                  .catch(error => {
+                    console.error('복지자원 데이터 처리 중 오류:', error);
+                    sidebarData.value = [{
+                      title: '데이터 로드 오류',
+                      description: '복지자원 정보를 불러오는데 실패했습니다.'
+                    }];
+                  });
+              }
+            });
+          }
           break;
       }
     };
@@ -692,7 +845,7 @@ export default defineComponent({
 
                       const localResources = jsonData
                         .filter((item: any) => {
-                          // 복지자원 위치 정규화
+                          // 복지자원 위치 정화
                           const itemLocation = normalizeLocation({
                             sido: item.sido,
                             sigungu: item.gu

@@ -23,6 +23,10 @@ FROM nginx:stable-alpine as production-stage
 RUN mkdir -p /etc/nginx/conf.d
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# SSL 인증서 복사
+COPY ssl/nginx-selfsigned.crt /etc/ssl/certs/
+COPY ssl/nginx-selfsigned.key /etc/ssl/private/
+
 # 빌드된 파일 복사
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
