@@ -29,6 +29,7 @@ services:
     volumes:
       - ./backend:/app  # 백엔드 소스코드 마운트
       - /app/node_modules
+      - ./backend/data:/app/data  # 이 줄 추가
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
