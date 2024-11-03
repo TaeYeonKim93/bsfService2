@@ -361,7 +361,6 @@ with api_status_container:
     st.markdown('<div class="section-header">DPG API 연동내역</div>', unsafe_allow_html=True)
     
     # API 연동 상태 표시
-    st.markdown('<div class="chart-wrapper">', unsafe_allow_html=True)
     st.progress(95, text="API 연동 상태: 95%")
     
     cols = st.columns(3)
