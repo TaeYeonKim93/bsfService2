@@ -4,8 +4,6 @@ import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import fs from 'fs';
-import pkg from 'xlsx';
-const { readFile, utils } = pkg;
 
 dotenv.config();
 
@@ -50,20 +48,16 @@ async function createAssistant() {
   console.log('Assistant created:', assistant.id);
 }
 
-// Excel to JSON 변환 함수
-async function convertExcelToJson() {
-  const filePath = path.join(__dirname, 'data/bokjiro_content.xlsx');
-  const workbook = readFile(filePath);
-  const sheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[sheetName];
-  const jsonData = utils.sheet_to_json(worksheet);
-  
-  // JSON 파일로 저장
+// JSON 파일 읽기 함수
+async function readJsonFile() {
   const jsonFilePath = path.join(__dirname, 'data/bokjiro_content.json');
-  fs.writeFileSync(jsonFilePath, JSON.stringify(jsonData, null, 2));
+  if (!fs.existsSync(jsonFilePath)) {
+    throw new Error('JSON file not found: ' + jsonFilePath);
+  }
   return jsonFilePath;
 }
 
+// Vector Store 생성 및 파일 업로드
 // Vector Store 생성 및 파일 업로드
 async function setupVectorStore() {
   try {
@@ -73,8 +67,8 @@ async function setupVectorStore() {
     });
     console.log('Vector Store created:', vectorStore.id);
 
-    // Excel을 JSON으로 변환
-    const jsonFilePath = await convertExcelToJson();
+    // JSON 파일 읽기
+    const jsonFilePath = await readJsonFile();
     const fileStream = fs.createReadStream(jsonFilePath);
     
     // 파일 업로드

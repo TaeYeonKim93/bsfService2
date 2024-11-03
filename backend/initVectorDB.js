@@ -1,10 +1,9 @@
 import { ChromaClient } from 'chromadb';
-import pkg from 'xlsx';
-const { readFile } = pkg;
 import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +20,7 @@ const openai = new OpenAI({
 async function initializeVectorDB() {
   try {
     // 기존 컬렉션 확인
-    let collection; // collection 변수를 선언합니다.
+    let collection;
     const collections = await client.listCollections();
     console.log('Available collections:', collections);
 
@@ -32,7 +31,7 @@ async function initializeVectorDB() {
       console.log('Using existing collection');
       collection = await client.getCollection({ name: "bokjiro_welfare" });
       console.log('Skipping data processing as collection already exists');
-      return; // 기존 컬렉션이 있을 경우 함수 종료
+      return;
     } else {
       console.log('No existing collection found, creating a new one');
       collection = await client.createCollection({
@@ -41,10 +40,9 @@ async function initializeVectorDB() {
       });
     }
 
-    // Excel 파일 읽기 및 데이터 전처리
-    const workbook = readFile(path.join(__dirname, 'data/bokjiro_content.xlsx'));
-    const sheetName = workbook.SheetNames[0];
-    const rawData = pkg.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    // JSON 파일 읽기
+    const jsonPath = path.join(__dirname, 'data/bokjiro_content.json');
+    const rawData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
 
     // 유효한 데이터만 필터링
     const validData = rawData.filter(row => row.title && row.sido);
@@ -53,7 +51,7 @@ async function initializeVectorDB() {
     // 설정
     const BATCH_SIZE = 100;
     const MAX_RETRIES = 3;
-    const CONCURRENT_BATCHES = 5;  // 동시 처리할 배치 수
+    const CONCURRENT_BATCHES = 5;
 
     // 배치 처리 함수
     async function processBatch(batchData, batchIndex) {

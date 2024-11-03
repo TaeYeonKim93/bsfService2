@@ -28,6 +28,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app  # 백엔드 소스코드 마운트
+      - /app/node_modules
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
