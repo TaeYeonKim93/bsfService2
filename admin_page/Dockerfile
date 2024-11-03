@@ -13,12 +13,10 @@ COPY requirements.txt .
 # 패키지 설치 (캐시 활용)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 애플리케이션 파일 복사 (CSV 제외)
+# 애플리케이션 파일 복사
 COPY main.py .
 COPY .streamlit .streamlit/
-
-# CSV 파일을 위한 디렉토리 생성
-RUN mkdir -p /app/data
+COPY data /app/data/
 
 EXPOSE 5000
 

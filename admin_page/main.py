@@ -59,10 +59,10 @@ st.markdown("""
     .card {
         background-color: white;
         border-radius: 8px;
-        padding: 1.5rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(0, 0, 0, 0.1);
+        overflow: hidden;
     }
     
     .card-header {
@@ -137,9 +137,105 @@ st.markdown("""
     
     /* Card content wrapper */
     .card-content {
-        padding: 0.5rem 0;
+        padding: 1.5rem;
         width: 100%;
         position: relative;
+    }
+
+    /* 섹션 스타일링 */
+    .section-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 1rem 0;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    
+    .section-header {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f1f1f;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .section-header::before {
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 1.25rem;
+        background: #FF4B4B;
+        border-radius: 2px;
+    }
+    
+    .metric-container {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+    
+    .metric-container:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* 차트 컨테이너 스타일링 */
+    .chart-wrapper {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .section-content {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    [data-testid="stDataFrame"] {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    [data-testid="stDataFrame"] table {
+        width: 100%;
+        font-family: 'Noto Sans KR', sans-serif;
+        border-collapse: collapse;
+    }
+
+    [data-testid="stDataFrame"] th {
+        background-color: #f8f9fa;
+        color: #1f1f1f;
+        font-weight: 500;
+        padding: 0.75rem !important;
+        border-bottom: 2px solid #eee;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    [data-testid="stDataFrame"] td {
+        color: #4a4a4a;
+        padding: 0.75rem !important;
+        border-bottom: 1px solid #eee;
+    }
+
+    [data-testid="stDataFrame"] tr:has(td[style*="background-color: #e6f3ff"]) {
+        background-color: #f8f9fa;
+    }
+
+    .recommended {
+        background-color: #e6f3ff !important;
+    }
+
+    [data-testid="stDataFrame"] td:last-child:not(:empty) {
+        background-color: #e6f3ff;
     }
 </style>
 """,
@@ -164,95 +260,101 @@ with st.sidebar:
     ''',
                 unsafe_allow_html=True)
 
-# Create a container for the DPG API list card
+# DPG API 목록 섹션
 dpg_container = st.container()
-
 with dpg_container:
-    st.markdown('''
-        <div>
-            <div class="card-header">DPG API 목록</div>
-    ''',
-                unsafe_allow_html=True)
-
-    col1 = st.container()
-    with col1:
-        try:
-            dpg_api_data = pd.read_csv('/app/data/DPG_API_list.csv', encoding='euc-kr')
-            # orgId와 version 열만 선택
-            selected_columns = dpg_api_data[[
-                'orgId', 'title', 'summary', 'description'
-            ]]
-
-            # 컬럼 설정
-            st.dataframe(
-                selected_columns,
-                column_config={
-                    "orgId":
-                    st.column_config.Column(width='small'),  # orgId 열 너비 100px
-                    "description": st.column_config.Column(
-                        width='medium')  # version 열 너비 100px
-                },
-                use_container_width=True,
-                height=400)
-        except UnicodeDecodeError:
-            try:
-                dpg_api_data = pd.read_csv('/app/data/DPG_API_list.csv',
-                                           encoding='cp949')
-                # orgId와 version 열만 선택
-                selected_columns = dpg_api_data[['orgId', 'version']]
-                st.dataframe(selected_columns,
-                             use_container_width=True,
-                             height=400)
-            except Exception as e:
-                st.error(f"Error loading DPG API list: {str(e)}")
-
-    st.markdown('''
-            </div>
-        </div>
-    ''',
-                unsafe_allow_html=True)
-
-# Main content with updated Korean headers and labels
-st.markdown('''
-    <div class="card">
-        <div class="card-header">수집된 데이터</div>
-        <div class="stats-grid">
-            <div>
-            </div>
-        </div>
-    </div>
+    st.markdown('<div class="section-header">DPG API 목록</div>', unsafe_allow_html=True)
     
-    <div class="card">
-        <div class="card-header">DPG API 연동내역</div>
-        <div class="stats-grid">
-        </div>
-    </div>
+    try:
+        # DPG API 목록 데이터 로드
+        dpg_api_data = pd.read_csv('/app/data/DPG_API_list.csv', encoding='euc-kr')
+        
+        # 선택 사유 데이터 로드
+        reasons_data = pd.read_csv('/app/data/ml/Customized_Selection_Reasons_for_Social_Security_APIs.csv', encoding='utf-8')
+        
+        # api_title 기준으로 데이터프레임 병합
+        merged_data = pd.merge(
+            dpg_api_data,
+            reasons_data[['api_title', '선택한 이유']],
+            left_on='title',
+            right_on='api_title',
+            how='left'
+        )
+        
+        # AI 추천이 있는 행을 맨 위로 정렬
+        merged_data['has_reason'] = ~merged_data['선택한 이유'].isna()
+        merged_data = merged_data.sort_values('has_reason', ascending=False)
+        
+        # 데이터프레임 표시
+        st.dataframe(
+            data=merged_data[['orgId', 'title', 'summary', 'description', '선택한 이유']],
+            column_config={
+                "orgId": st.column_config.Column("ID", width=70),
+                "title": st.column_config.Column("제목", width=200),
+                "summary": st.column_config.Column("요약", width=300),
+                "description": st.column_config.Column("설명", width=300),
+                "선택한 이유": st.column_config.Column(
+                    "AI 추천",
+                    width=300,
+                    help="AI가 추천한 이유"
+                )
+            },
+            hide_index=True,
+            use_container_width=True,
+            height=400
+        )
+    except Exception as e:
+        st.error(f"DPG API 목록을 불러오는 중 오류가 발생했습니다: {str(e)}")
     
-    <div class="card">
-        <div class="card-header">머신러닝 현황</div>
-        <div class="stats-grid">
-            <div>
-            </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="card">
-        <div class="card-header">임시</div>
-        <div class="stats-grid">
-            <div>
-                <div>차트 영역</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">지도</div>
-        <div class="stats-grid">
-            <div>
-                <div>지도 영역</div>
-            </div>
-        </div>
-    </div>
-''',
-            unsafe_allow_html=True)
+# 수집된 데이터 섹션
+collected_data_container = st.container()
+with collected_data_container:
+    st.markdown('<div class="section-header">수집된 데이터</div>', unsafe_allow_html=True)
+    
+    cols = st.columns(4)
+    with cols[0]:
+        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+        st.metric(label="전체 데이터", value="25,430", delta="1,200")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with cols[1]:
+        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+        st.metric(label="오늘 수집", value="1,234", delta="234")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with cols[2]:
+        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+        st.metric(label="유효 데이터", value="23,456", delta="1,100")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with cols[3]:
+        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+        st.metric(label="중복 제거", value="1,974", delta="-100")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+# DPG API 연동내역 섹션
+api_status_container = st.container()
+with api_status_container:
+    st.markdown('<div class="section-header">DPG API 연동내역</div>', unsafe_allow_html=True)
+    
+    # API 연동 상태 표시
+    st.markdown('<div class="chart-wrapper">', unsafe_allow_html=True)
+    st.progress(95, text="API 연동 상태: 95%")
+    
+    cols = st.columns(3)
+    with cols[0]:
+        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+        st.metric(label=" API 수", value="50", delta="5")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with cols[1]:
+        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+        st.metric(label="활성 API", value="48", delta="3")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with cols[2]:
+        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+        st.metric(label="오류 API", value="2", delta="-2")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
