@@ -1,6 +1,7 @@
 import streamlit as st
 import datetime
 import pandas as pd
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 # Set page config for proper encoding (must be first Streamlit command)
 st.set_page_config(page_title="사각지대 손전등 서비스 관리자 페이지",
@@ -237,6 +238,10 @@ st.markdown("""
     [data-testid="stDataFrame"] td:last-child:not(:empty) {
         background-color: #e6f3ff;
     }
+
+    .ag-theme-streamlit .recommended-row {
+        background-color: #e6f3ff !important;
+    }
 </style>
 """,
             unsafe_allow_html=True)
@@ -285,23 +290,37 @@ with dpg_container:
         merged_data['has_reason'] = ~merged_data['선택한 이유'].isna()
         merged_data = merged_data.sort_values('has_reason', ascending=False)
         
-        # 데이터프레임 표시
-        st.dataframe(
-            data=merged_data[['orgId', 'title', 'summary', 'description', '선택한 이유']],
-            column_config={
-                "orgId": st.column_config.Column("ID", width=70),
-                "title": st.column_config.Column("제목", width=200),
-                "summary": st.column_config.Column("요약", width=300),
-                "description": st.column_config.Column("설명", width=300),
-                "선택한 이유": st.column_config.Column(
-                    "AI 추천",
-                    width=300,
-                    help="AI가 추천한 이유"
-                )
-            },
-            hide_index=True,
-            use_container_width=True,
-            height=400
+        # 정렬 후 순번 부여
+        merged_data = merged_data.reset_index(drop=True)  # drop=True로 이전 인덱스 제거
+        merged_data['순번'] = merged_data.index + 1
+        
+        # Grid 옵션 설정
+        gb = GridOptionsBuilder.from_dataframe(merged_data[['순번', 'title', '선택한 이유','summary', 'description' ]])
+        
+        gb.configure_column('순번', header_name="No.", width=30)
+        gb.configure_column('선택한 이유', header_name="AI 추천", width=200)
+        gb.configure_column('title', header_name="제목", width=50)
+        gb.configure_column('summary', header_name="요약", width=200)
+        gb.configure_column('description', header_name="설명", width=200)
+        
+        # 툴팁 커스터마이징 옵션 추가
+        gb.configure_grid_options(
+            tooltipShowDelay=0,
+            tooltipHideDelay=2000,
+            rowClassRules={
+                'recommended-row': 'data.선택한 이유 != null'
+            }
+        )
+        
+        grid_options = gb.build()
+        
+        # AgGrid 표시
+        AgGrid(
+            merged_data,
+            gridOptions=grid_options,
+            update_mode=GridUpdateMode.SELECTION_CHANGED,
+            allow_unsafe_jscode=True,
+            theme='streamlit'
         )
     except Exception as e:
         st.error(f"DPG API 목록을 불러오는 중 오류가 발생했습니다: {str(e)}")
