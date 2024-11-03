@@ -326,32 +326,35 @@ with dpg_container:
         st.error(f"DPG API 목록을 불러오는 중 오류가 발생했습니다: {str(e)}")
     
 
-# 수집된 데이터 섹션
-collected_data_container = st.container()
-with collected_data_container:
+# 수집된 데이터와 지도 섹션을 나란히 배치
+col1, col2 = st.columns(2)
+
+with col1:
+    # 수집된 데이터 섹션
     st.markdown('<div class="section-header">수집된 데이터</div>', unsafe_allow_html=True)
     
     cols = st.columns(4)
     with cols[0]:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
         st.metric(label="전체 데이터", value="25,430", delta="1,200")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     with cols[1]:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
         st.metric(label="오늘 수집", value="1,234", delta="234")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     with cols[2]:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
         st.metric(label="유효 데이터", value="23,456", delta="1,100")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     with cols[3]:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
         st.metric(label="중복 제거", value="1,974", delta="-100")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
+
+with col2:
+    # 위험지도 섹션
+    st.markdown('<div class="section-header">위험 지도</div>', unsafe_allow_html=True)
+    st.components.v1.iframe(
+        src="https://localhost/map/mini",
+        height=300,
+        scrolling=False
+    )
+
 # DPG API 연동내역 섹션
 api_status_container = st.container()
 with api_status_container:
@@ -363,17 +366,86 @@ with api_status_container:
     
     cols = st.columns(3)
     with cols[0]:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
         st.metric(label=" API 수", value="50", delta="5")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     with cols[1]:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
         st.metric(label="활성 API", value="48", delta="3")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     with cols[2]:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
         st.metric(label="오류 API", value="2", delta="-2")
-        st.markdown('</div>', unsafe_allow_html=True)
     
+
+# 머신러닝 현황 섹션
+ml_status_container = st.container()
+with ml_status_container:
+    st.markdown('<div class="section-header">머신러닝 현황</div>', unsafe_allow_html=True)
+    
+    try:
+        # 탭 생성
+        info_tab, download_tab = st.tabs(["모델 정보", "모델 다운로드"])
+        
+        with info_tab:
+            # 모델 파일 정보 데이터프레임 생성
+            model_info_df = pd.DataFrame({
+                '모델명': ['Random Forest 모델', 'XGBoost 모델'],
+                '파일명': ['random_forest_model2.pkl', 'xgboost_model2.pkl'],
+                '용도': ['복지 서비스 추천을 위한 기본 분류 모델', '특성 중요도 분석 및 고급 추천'],
+                '학습 데이터': ['2023년 복지 서비스 신청 및 수혜 데이터', '2023년 복지 서비스 매칭 데이터']
+            })
+
+            # Grid 옵션 설정
+            gb = GridOptionsBuilder.from_dataframe(model_info_df)
+            
+            # 개별 컬럼 설정 - 비율로 설정
+            gb.configure_column('모델명', minWidth=150, flex=1)
+            gb.configure_column('파일명', minWidth=180, flex=1)
+            gb.configure_column('용도', minWidth=250, flex=2)
+            gb.configure_column('학습 데이터', minWidth=250, flex=2)
+
+            # 그리드 전체 설정
+            gb.configure_grid_options(
+                domLayout='autoHeight',
+                rowHeight=35,  # 행 높이만 줄임
+                headerHeight=35,  # 헤더 높이만 줄임
+            )
+            
+            grid_options = gb.build()
+
+            # AgGrid 표시 - 전체 너비 사용
+            AgGrid(
+                model_info_df,
+                gridOptions=grid_options,
+                update_mode=GridUpdateMode.MODEL_CHANGED,
+                theme='streamlit',
+                custom_css={
+                    ".ag-theme-streamlit": {"background-color": "transparent"},
+                    ".ag-root-wrapper": {"background-color": "transparent", "width": "100%"},
+                    ".ag-row": {"background-color": "transparent"}
+                }
+            )
+        
+        with download_tab:
+            # Random Forest 모델 다운로드 버튼
+            with open('/app/data/ml/random_forest_model2.pkl', 'rb') as rf_file:
+                st.download_button(
+                    label="Random Forest 다운로드",
+                    data=rf_file,
+                    file_name="random_forest_model2.pkl",
+                    mime="application/octet-stream",
+                    key='rf_download'
+                )
+            
+            st.markdown("<br>", unsafe_allow_html=True)  # 버튼 사이 간격
+            
+            # XGBoost 모델 다운로드 버튼
+            with open('/app/data/ml/xgboost_model2.pkl', 'rb') as xgb_file:
+                st.download_button(
+                    label="XGBoost 다운로드",
+                    data=xgb_file,
+                    file_name="xgboost_model2.pkl",
+                    mime="application/octet-stream",
+                    key='xgb_download'
+                )
+        
+    except Exception as e:
+        st.error(f"머신러닝 현황을 불러오는 중 오류가 발생했습니다: {str(e)}")
