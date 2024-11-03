@@ -83,7 +83,24 @@
               fillColor: location.color,
               fillOpacity: 0.8,
               weight: 1
-            }).addTo(map.value!);
+            })
+            .bindPopup(`
+              <div style="
+                font-family: 'Noto Sans KR', sans-serif;
+                padding: 5px;
+                text-align: center;
+              ">
+                <strong>${location.Sido} ${location.Sigungu}</strong><br>
+                <span style="
+                  color: ${location.color};
+                  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                  font-weight: bold;
+                ">
+                  위험도: ${location.Result.toFixed(1)}%
+                </span>
+              </div>
+            `)
+            .addTo(map.value!);
   
           } catch (error) {
             console.error('데이터 처리 중 오류:', error, location);

@@ -7,6 +7,7 @@ import * as directives from 'vuetify/directives'
 import { createRouter, createWebHistory } from 'vue-router'
 import Map from './components/Map.vue'
 import MiniMap from './components/MiniMap.vue'
+import RiskAnalysis from './components/RiskAnalysis.vue'
 
 const vuetify = createVuetify({
   components,
@@ -23,6 +24,10 @@ const router = createRouter({
     {
       path: '/map/mini',
       component: MiniMap
+    },
+    {
+      path: '/risk',
+      component: RiskAnalysis
     }
   ]
 })

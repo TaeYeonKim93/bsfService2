@@ -301,28 +301,83 @@ export default defineComponent({
           const lat = parseFloat(location.Longitude);
           const lng = parseFloat(location.Latitude);
           
-          L.marker([lat, lng], {
+          // 위험도 분석 이미지 요청 함수
+          const getAnalysisImage = async (sido: string, sigungu: string) => {
+            try {
+              const response = await fetch('/xai/analyze', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ sido, sigungu })
+              });
+              
+              const data = await response.json();
+              return data.success ? data.image : null;
+            } catch (error) {
+              console.error('위험도 분석 요청 실패:', error);
+              return null;
+            }
+          };
+
+          // 마커 생성 및 팝업 설정
+          const marker = L.marker([lat, lng], {
             icon: createCircleIcon(location.color)
-          }).addTo(map.value!)
-          .bindPopup(`
+          }).addTo(map.value!);
+
+          // 팝업 클릭 이벤트 처리
+          marker.on('click', async () => {
+            const analysisImage = await getAnalysisImage(location.Sido, location.Sigungu);
+            
+            const popupContent = `
+              <div style="
+                font-family: 'Noto Sans KR', sans-serif;
+                text-align: center;
+                background: white;
+                border-radius: 8px;
+                min-width: 500px;
+              ">
+                <strong style="font-size: 24px;">${location.Sido} ${location.Sigungu}</strong><br>
+                <span style="font-size: 20px;">위험도: ${location.Result.toFixed(2)}%</span>
+                ${analysisImage ? `
+                  <div style="margin-top: 20px;">
+                    <img src="data:image/png;base64,${analysisImage}" 
+                         alt="위험도 분석" 
+                         style="width: 500px;
+                                max-width: 100%;
+                                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                                border-radius: 8px;"/>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+            
+            marker.setPopupContent(popupContent);
+          });
+
+          // 초기 팝업 내용 설정
+          const initialContent = `
             <div style="
               font-family: 'Noto Sans KR', sans-serif;
-              padding: 5px;
+              padding: 20px;
               text-align: center;
+              background: white;
+              border-radius: 8px;
+              min-width: 200px;
             ">
-              <strong>${location.Sido} ${location.Sigungu}</strong><br>
-              <span style="
-                color: ${location.color};
-                text-shadow: 
-                1px 1px 3px #000
-            ">
-                위험도: ${location.Result.toFixed(1)}%
-              </span>
+              <strong style="font-size: 16px;">${location.Sido} ${location.Sigungu}</strong><br>
+              <span style="font-size: 14px;">위험도: ${location.Result.toFixed(2)}%</span>
             </div>
-          `);
+          `;
+
+          // 초기 팝업 설정
+          marker.bindPopup(initialContent, {
+            maxWidth: 500,
+            className: 'custom-popup'
+          });
 
         } catch (error) {
-          console.error('데이터 처리 중 오류:', error, location);
+          console.error('마커 생성 중 오류:', error);
         }
       });
 
@@ -385,7 +440,7 @@ export default defineComponent({
     const getRiskLevel = (normalizedResult: number) => {
       if (normalizedResult >= 80) return '매우 높음';
       if (normalizedResult >= 60) return '높음';
-      if (normalizedResult >= 40) return '중��';
+      if (normalizedResult >= 40) return '중간';
       if (normalizedResult >= 20) return '낮음';
       return '매우 낮음';
     };
@@ -683,7 +738,7 @@ export default defineComponent({
                           sigungu: sigungu
                         });
 
-                        // 시도 레벨 매칭
+                        // 도 레벨 매칭
                         const sidoMatch = itemLocation.sido === searchLocation.sido;
                         
                         // 시군구 레벨 매칭 (시 전체 데이터도 포함)
@@ -826,7 +881,7 @@ export default defineComponent({
                 }
 
                 if (selectedButton.value === '자원탐색') {
-                  console.log('자원탐색 데이터 로드 시작');
+                  console.log('자원탐색 이터 로드 시작');
                   fetch('/bokjiro_content.json')
                     .then(response => {
                       console.log('복지자원 데이터 응답 받음');
@@ -862,7 +917,7 @@ export default defineComponent({
                           
                           // 시군구 레벨 매칭 (시 전체 데이터도 포함)
                           const sigunguMatch = !item.gu || // 시 전체 데이터
-                            item.gu.includes(data.sigungu.split(' ')[0]); // 시군구 첫 단어로 매칭 (예: "성남시")
+                            item.gu.includes(data.sigungu.split(' ')[0]); // 시군구 예: "성남시")
 
                           return sidoMatch && (sigunguMatch || !item.gu);
                         })
@@ -1352,13 +1407,18 @@ export default defineComponent({
 }
 
 .custom-popup .leaflet-popup-content-wrapper {
+  padding: 0;
   border-radius: 8px;
-  padding: 5px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0;
+  width: auto !important;
 }
 
 .custom-popup .leaflet-popup-tip {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 14px rgba(0,0,0,0.2);
 }
 
 .search-pin {
