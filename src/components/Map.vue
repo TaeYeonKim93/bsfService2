@@ -284,7 +284,28 @@ export default defineComponent({
 
     // 3. 지도 초기화 함수
     const initMap = async () => {
-      map.value = L.map('map', { zoomControl: false }).setView([36.5, 127.5], 7);
+      // 지도 컨테이너가 준비되었는지 확인
+      const mapContainer = document.getElementById('map');
+      if (!mapContainer) {
+        console.error('Map container not found');
+        return;
+      }
+
+      // 지도 초기화 전에 이전 인스턴스 제거
+      if (map.value) {
+        map.value.remove();
+      }
+
+      map.value = L.map('map', { 
+        zoomControl: false
+      }).setView([36.5, 127.5], 7);
+
+      // 지도가 완전히 로드된 후에 이벤트 리스너 추가
+      map.value.whenReady(() => {
+        // 여기서 필요한 이벤트 리스너나 추가 설정
+        console.log('Map is fully loaded and ready');
+      });
+
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
@@ -864,14 +885,38 @@ export default defineComponent({
                 const coords = await getAddressCoords(data.address);
                 console.log('좌표 변환 결과:', coords);
                 
+                // 기존 마커 제거
                 if (userMarker.value) {
                   map.value.removeLayer(userMarker.value);
                 }
-                
+
+                // 지도 이동 및 마커 생성을 한 번만 실행
                 const csvData = await loadCsvData();
                 const nearestLocations = getClosestRiskData(coords, csvData);
                 const closestLocation = nearestLocations[0];
+// 좌표 유효성 검사
+                if (!coords || typeof coords.lat !== 'number' || typeof coords.lng !== 'number') {
+                  console.error('잘못된 좌표:', coords);
+                  return;
+                }
+                console.log('지도 이동 시작 - 검색 위치:', coords);
                 
+                // 지도 초기화 방지를 위해 현재 줌 레벨 저장
+                const currentZoom = map.value.getZoom();
+                
+                // 명시적으로 좌표 지정하여 이동
+                const targetLatLng = L.latLng(coords.lat, coords.lng);
+                map.value.setView(targetLatLng, 14, { animate: false });
+                
+                // 이동 완료 확인
+                const center = map.value.getCenter();
+                console.log('지도 이동 완료 - 현재 중심:', center);
+                console.log('목표 좌표와 실제 중심점 차이:',
+                  Math.abs(center.lat - coords.lat),
+                  Math.abs(center.lng - coords.lng)
+                );
+
+                // 마커 생성
                 userMarker.value = L.marker([coords.lat, coords.lng]).addTo(map.value);
                 userMarker.value.bindPopup(`
                   <div style="font-family: 'Noto Sans KR', sans-serif;">
@@ -884,6 +929,7 @@ export default defineComponent({
                   </div>
                 `).openPopup();
 
+                // 사이드바 데이터 업데이트는 한 번만 실행
                 if (selectedButton.value === '위기탐색') {
                   sidebarData.value = nearestLocations.map(location => ({
                     title: `${location.Sido} ${location.Sigungu}`,
@@ -1115,33 +1161,24 @@ export default defineComponent({
 
     const moveToLocation = (item: any) => {
       if (item.lat && item.lng && map.value) {
-        // 지도 뷰 이동
-        map.value.setView([item.lat, item.lng], 14);
-        
-        // 기존 마커가 있다면 제거
-        if (userMarker.value) {
-          map.value.removeLayer(userMarker.value);
-        }
-        
-        // 새 마커 성
-        userMarker.value = L.marker([item.lat, item.lng], {
-          icon: L.icon({
-            iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-            shadowSize: [41, 41],
-          })
-        }).addTo(map.value);
+        const coordinates = {
+          lat: parseFloat(item.lat),
+          lng: parseFloat(item.lng)
+        };
 
-        // 팝업 추가
-        userMarker.value.bindPopup(`
-          <div style="font-family: 'Noto Sans KR', sans-serif;">
-            <b>${item.title}</b><br>
-            ${item.description}
-          </div>
-        `).openPopup();
+        console.log('지도 이동 시작:', coordinates);
+        map.value.setView([coordinates.lat, coordinates.lng], 14);
+        
+        // 해당 위치의 원형 마커 찾기
+        map.value.eachLayer((layer: any) => {
+          if (layer instanceof L.Marker) {
+            const markerLatLng = layer.getLatLng();
+            if (markerLatLng.lat === coordinates.lat && markerLatLng.lng === coordinates.lng) {
+              // 원형 마커를 찾으면 클릭 이벤트 발생
+              layer.fire('click');
+            }
+          }
+        });
       }
     };
 
