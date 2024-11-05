@@ -452,7 +452,7 @@ export default defineComponent({
     const getClosestRiskData = (coords: { lat: number, lng: number }, csvData: any[], limit: number = 10) => {
       return csvData
         .filter(location => {
-          // 유효한 데이터만 필터링
+          // 효한 데이터만 필링
           const lat = parseFloat(location.Longitude);
           const lng = parseFloat(location.Latitude);
           return !isNaN(lat) && !isNaN(lng) && location.Result !== undefined;
@@ -635,7 +635,7 @@ export default defineComponent({
                       if (sidebarData.value.length === 0) {
                         sidebarData.value = [{
                           title: '검색 결과 없음',
-                          description: '해당 지역의 등록된 복지자���이 없습니다.'
+                          description: '해당 지역의 등록된 복지자원이 없습니다.'
                         }];
                       }
                     })
@@ -747,7 +747,7 @@ export default defineComponent({
                         
                         // 시군구 레벨 매칭 (시 전체 데이터도 포함)
                         const sigunguMatch = !item.gu || // 시 전체 데이터
-                          item.gu.includes(sigungu.split(' ')[0]); // 시군구 첫 단어로 매칭
+                          item.gu.includes(sigungu.split(' ')[0]); // 시군구  어로 매칭
 
                         return sidoMatch && (sigunguMatch || !item.gu);
                       })
@@ -921,7 +921,7 @@ export default defineComponent({
                           
                           // 시군구 레벨 매칭 (시 전체 데이터도 포함)
                           const sigunguMatch = !item.gu || // 시 전체 데이터
-                            item.gu.includes(data.sigungu.split(' ')[0]); // 시군구 예: "성남시")
+                            item.gu.includes(data.sigungu.split(' ')[0]); // 시군 예: "성남시")
 
                           return sidoMatch && (sigunguMatch || !item.gu);
                         })
@@ -1004,6 +1004,7 @@ export default defineComponent({
       if (!userMessage.value.trim()) return;
       
       const message = userMessage.value;
+      console.log('사용자 메시지:', message);
       messages.value.push({ type: 'user', content: message });
       userMessage.value = '';
       loading.value = true;
@@ -1020,13 +1021,94 @@ export default defineComponent({
         if (!response.ok) throw new Error('채팅 요청 실패');
         
         const data = await response.json();
-        messages.value.push({ type: 'assistant', content: data.response });
+        console.log('서 응답 데이터:', data);
+
+        // AI 응답이 있을 경우에만 메시지 추가
+        if (data.response) {
+          console.log('AI 응답 추가:', data.response);
+          messages.value.push({ type: 'assistant', content: data.response });
+        }
+
+        // functionCall 처리 로깅
+        if (data.functionCall) {
+          console.log('Function call 감지:', data.functionCall);
+          
+          if (data.functionCall.name === 'focusLocation') {
+            console.log('focusLocation 함수 실행 시작');
+            const { sido, sigungu } = data.functionCall.arguments;
+            console.log('정규화 전 위치 정보:', { sido, sigungu });
+            
+            // 위치 정보 정규화
+            const normalizedLocation = normalizeLocation({
+              sido,
+              sigungu
+            });
+            console.log('정규화된 위치 정보:', normalizedLocation);
+            
+            const coordinates = await findLocationCoordinates(
+              normalizedLocation.sido, 
+              normalizedLocation.sigungu
+            );
+            console.log('좌표 변환 결과:', coordinates);
+            
+            if (coordinates) {
+              console.log('지도 이동 시작:', coordinates);
+              map.value.setView([coordinates.lat, coordinates.lng], 14);
+              console.log('지도 이동 완료');
+              
+              if (userMarker.value) {
+                console.log('기존 마커 제거');
+                map.value.removeLayer(userMarker.value);
+              }
+              
+              console.log('새 마커 생성 시작');
+              userMarker.value = L.marker([coordinates.lat, coordinates.lng]).addTo(map.value);
+              console.log('새 마커 생성 완료');
+              
+              userMarker.value.bindPopup(`
+                <div style="font-family: 'Noto Sans KR', sans-serif;">
+                  <b>${normalizedLocation.sido} ${normalizedLocation.sigungu}</b><br>
+                  위험도: ${coordinates.riskLevel?.toFixed(2)}%
+                </div>
+              `).openPopup();
+              console.log('팝업 설정 완료');
+            } else {
+              console.error('좌표를 찾을 수 없음:', normalizedLocation.sido, normalizedLocation.sigungu);
+            }
+          }
+        }
       } catch (error) {
         console.error('Chat error:', error);
-        messages.value.push({ type: 'assistant', content: '죄송합니. 오류가 발생했습니다.' });
+        messages.value.push({ type: 'assistant', content: '죄송합니다. 오류가 발생했습니다.' });
       } finally {
         loading.value = false;
       }
+    };
+
+    const findLocationCoordinates = async (sido: string, sigungu: string) => {
+      console.log('findLocationCoordinates 시작:', { sido, sigungu });
+      const csvData = await loadCsvData();
+      console.log('CSV 데이터 로드됨:', csvData.length, '개의 항목');
+      
+      const location = csvData.find((item: any) => {
+        console.log('검색중:', item.Sido, item.Sigungu);
+        return item.Sido === sido && item.Sigungu === sigungu;
+      });
+      
+      console.log('찾은 위치 데이터:', location);
+      
+      if (location) {
+        const result = {
+          // 위도와 경도를 올바르게 매핑
+          lat: parseFloat(location.Longitude),  // 위도
+          lng: parseFloat(location.Latitude),   // 경도
+          riskLevel: parseFloat(location.Result)
+        };
+        console.log('변환된 좌표:', result);
+        return result;
+      }
+      console.log('위치를 찾지 못함');
+      return null;
     };
 
     const moveToLocation = (item: any) => {

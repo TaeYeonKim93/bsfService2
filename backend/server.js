@@ -55,6 +55,7 @@ const userThreads = new Map();
 // 채팅 API 엔드포인트
 app.post('/api/chat', async (req, res) => {
   console.log('=== Chat API Request Started ===');
+  console.log('Request body:', req.body);
   
   try {
     const { message } = req.body;
@@ -62,42 +63,90 @@ app.post('/api/chat', async (req, res) => {
 
     let thread;
     if (!userThreads.has('default')) {
+      console.log('Creating new thread...');
       thread = await openai.beta.threads.create();
       userThreads.set('default', thread.id);
+      console.log('Created new thread:', thread.id);
     } else {
       thread = { id: userThreads.get('default') };
+      console.log('Using existing thread:', thread.id);
     }
 
+    console.log('Creating user message...');
     await openai.beta.threads.messages.create(
       thread.id,
       { role: "user", content: message }
     );
     
+    console.log('Creating new run...');
     const run = await openai.beta.threads.runs.create(
       thread.id,
       { assistant_id: ASSISTANT_ID }
     );
+    console.log('New run created:', run.id);
     
     let runStatus = await openai.beta.threads.runs.retrieve(
       thread.id,
       run.id
     );
+    console.log('Initial run status:', runStatus.status);
+    
+    let functionCallData = null;
     
     while (runStatus.status !== 'completed') {
+      console.log('Current run status:', runStatus.status);
+      
+      if (runStatus.status === 'requires_action') {
+        console.log('Action required:', runStatus.required_action);
+        const toolCalls = runStatus.required_action.submit_tool_outputs.tool_calls;
+        console.log('Tool calls:', toolCalls);
+        
+        if (toolCalls[0].function) {
+          functionCallData = {
+            name: toolCalls[0].function.name,
+            arguments: JSON.parse(toolCalls[0].function.arguments)
+          };
+          console.log('Function call data:', functionCallData);
+          
+          if (functionCallData.name === 'focusLocation') {
+            console.log('Processing focusLocation...');
+            const toolOutputs = [{
+              tool_call_id: toolCalls[0].id,
+              output: JSON.stringify({
+                success: true,
+                location: functionCallData.arguments
+              })
+            }];
+            
+            console.log('Submitting tool outputs:', toolOutputs);
+            await openai.beta.threads.runs.submitToolOutputs(
+              thread.id,
+              run.id,
+              { tool_outputs: toolOutputs }
+            );
+            console.log('Tool outputs submitted');
+          }
+        }
+      }
+      
       await new Promise(resolve => setTimeout(resolve, 1000));
-      runStatus = await openai.beta.threads.runs.retrieve(
-        thread.id,
-        run.id
-      );
+      console.log('Retrieving updated run status...');
+      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
     }
     
+    console.log('Run completed. Getting messages...');
     const messages = await openai.beta.threads.messages.list(thread.id);
     const lastMessage = messages.data[0];
+    console.log('Last message:', lastMessage);
 
-    res.json({ 
-      response: lastMessage.content[0].text.value 
-    });
+    const response = {
+      response: lastMessage.content[0].text.value,
+      functionCall: functionCallData
+    };
+    console.log('Sending response:', response);
     
+    res.json(response);
+
   } catch (error) {
     console.error('Chat API Error:', error);
     res.status(500).json({ error: error.message });
