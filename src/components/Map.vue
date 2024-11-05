@@ -7,7 +7,7 @@
             block
             class="text-none sidebar-btn"
             :class="{ 'selected': selectedButtons.has(button.text) }"
-            @click="handleButtonClick(button)"
+            @click="handleButtonClick(button)"  
           >
             <img :src="button.icon" :alt="button.text" class="sidebar-btn-icon" />
           </v-btn>
@@ -224,7 +224,7 @@ export default defineComponent({
       }
     };
 
-    // 위험도에 따른 색상 계산 함수 수정
+    // 위험도에 따른 색상 계 함수 수정
     const getRiskColor = (normalizedResult: number) => {
       if (normalizedResult >= 80) return '#FF0000';       // 빨강 (매우 높음)
       if (normalizedResult >= 60) return '#FF4500';       // 주황빨강 (높음)
@@ -1054,26 +1054,17 @@ export default defineComponent({
             if (coordinates) {
               console.log('지도 이동 시작:', coordinates);
               map.value.setView([coordinates.lat, coordinates.lng], 14);
-              console.log('지도 이동 완료');
               
-              if (userMarker.value) {
-                console.log('기존 마커 제거');
-                map.value.removeLayer(userMarker.value);
-              }
-              
-              console.log('새 마커 생성 시작');
-              userMarker.value = L.marker([coordinates.lat, coordinates.lng]).addTo(map.value);
-              console.log('새 마커 생성 완료');
-              
-              userMarker.value.bindPopup(`
-                <div style="font-family: 'Noto Sans KR', sans-serif;">
-                  <b>${normalizedLocation.sido} ${normalizedLocation.sigungu}</b><br>
-                  위험도: ${coordinates.riskLevel?.toFixed(2)}%
-                </div>
-              `).openPopup();
-              console.log('팝업 설정 완료');
-            } else {
-              console.error('좌표를 찾을 수 없음:', normalizedLocation.sido, normalizedLocation.sigungu);
+              // 해당 위치의 원형 마커 찾기
+              map.value.eachLayer((layer: any) => {
+                if (layer instanceof L.Marker) {
+                  const markerLatLng = layer.getLatLng();
+                  if (markerLatLng.lat === coordinates.lat && markerLatLng.lng === coordinates.lng) {
+                    // 원형 마커를 찾으면 클릭 이벤트 발생
+                    layer.fire('click');
+                  }
+                }
+              });
             }
           }
         }
@@ -1395,10 +1386,9 @@ export default defineComponent({
 .chat-window {
   position: fixed;
   bottom: -600px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  max-width: 800px;
+  right: 20px;
+  width: 400px;
+  max-width: none;
   height: 600px;
   background-color: white;
   transition: bottom 0.3s ease;
