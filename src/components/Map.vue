@@ -83,12 +83,20 @@
         </v-icon>
         <v-icon v-else>mdi-close</v-icon>
       </v-btn>
-      <div class="chat-window" :class="{ 'expanded': chatExpanded }">
+      <div class="chat-window" :class="{ 
+        'expanded': chatExpanded, 
+        'bottom-position': isBottomPosition 
+      }">
         <div class="chat-header">
           <span>(DPG) 손전등 AI 채팅시스템</span>
-          <v-btn icon size="small" @click="toggleChatWindow">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
+          <div class="chat-header-buttons">
+            <v-btn icon size="small" @click="toggleChatPosition">
+              <v-icon>{{ isBottomPosition ? 'mdi-arrow-right' : 'mdi-arrow-down' }}</v-icon>
+            </v-btn>
+            <v-btn icon size="small" @click="toggleChatWindow">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
         </div>
         <div class="chat-messages">
           <div v-for="(msg, index) in messages" :key="index" 
@@ -177,6 +185,7 @@ export default defineComponent({
       }
     ]);
     const loading = ref(false);
+    const isBottomPosition = ref(true);
 
     const paginatedData = computed(() => {
       const start = (currentPage.value - 1) * itemsPerPage;
@@ -584,7 +593,7 @@ export default defineComponent({
                     </div>
                   `).openPopup();
 
-                  // 복지자원 데이터 로드 및 필터링
+                  // 복지자원 데이터 로드 및 터링
                   fetch('/bokjiro_content.json')
                     .then(response => response.json())
                     .then(data => {
@@ -997,7 +1006,9 @@ export default defineComponent({
     };
 
     const toggleChatWindow = () => {
+      console.log('채팅창 토글 이전:', chatExpanded.value);
       chatExpanded.value = !chatExpanded.value;
+      console.log('채팅창 토글 이후:', chatExpanded.value);
     };
 
     const sendMessage = async () => {
@@ -1135,7 +1146,7 @@ export default defineComponent({
     };
 
     const normalizeLocation = (location: { sido: string, sigungu?: string }) => {
-      // 시도 정규화
+      // 시 정규화
       let normalizedSido = location.sido
         .replace(/^서울광역시$/, '서울특별시')
         .replace(/^서울$/, '서울특별시')
@@ -1189,6 +1200,16 @@ export default defineComponent({
       return marked(content);
     };
 
+    const toggleChatPosition = () => {
+      console.log('이전 위치:', isBottomPosition.value ? '아래' : '오른쪽');
+      isBottomPosition.value = !isBottomPosition.value;
+      console.log('변경된 위치:', isBottomPosition.value ? '아래' : '오른쪽');
+      console.log('현재 클래스:', {
+        expanded: chatExpanded.value,
+        bottomPosition: isBottomPosition.value
+      });
+    };
+
     onMounted(async () => {
       await initMap();
       console.log('Map component mounted');
@@ -1223,6 +1244,8 @@ export default defineComponent({
       moveToLocation,
       handleButtonClick,
       renderMessage,
+      isBottomPosition,
+      toggleChatPosition,
     };
   }
 });
@@ -1388,19 +1411,31 @@ export default defineComponent({
   bottom: -600px;
   right: 20px;
   width: 400px;
-  max-width: none;
+  min-width: 300px;  /* 최소 너비 설정 */
+  min-height: 200px; /* 최소 높이 설정 */
   height: 600px;
   background-color: white;
-  transition: bottom 0.3s ease;
   z-index: 1001;
   display: flex;
   flex-direction: column;
   border-radius: 8px 8px 0 0;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  resize: both;
+  overflow: auto;
+  position: relative;
 }
 
-.chat-window.expanded {
-  bottom: 0;
+/* 커스텀 리사이즈 핸들 */
+.chat-window::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background: #f0f0f0;
+  cursor: nw-resize;
+  border-radius: 0 0 4px 0;
 }
 
 .chat-header {
@@ -1625,10 +1660,50 @@ export default defineComponent({
   font-style: italic;
   color: #34495e;
 }
+
+.chat-header-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-window {
+  position: fixed;
+  width: 400px;
+  height: 600px;
+  background-color: white;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.chat-window:not(.expanded) {
+  transform: translateY(100%);
+}
+
+.chat-window.expanded {
+  bottom: 0;
+  right: 20px;
+}
+
+/* 오른쪽 위치일 때의 스타일 */
+.chat-window.expanded:not(.bottom-position) {
+  bottom: 50%;
+  right: 0;
+  transform: translateY(50%);
+  border-radius: 8px 0 0 8px;
+  height: 600px;
+}
+
+/* 아래쪽 위치일 때의 스타일 */
+.chat-window.expanded.bottom-position {
+  bottom: 0;
+  left : 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 100%;
+  height: 300px;
+}
 </style>
-
-
-
-
-
-
