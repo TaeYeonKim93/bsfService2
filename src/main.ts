@@ -8,6 +8,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Map from './components/Map.vue'
 import MiniMap from './components/MiniMap.vue'
 import RiskAnalysis from './components/RiskAnalysis.vue'
+import '@mdi/font/css/materialdesignicons.css'
 
 const vuetify = createVuetify({
   components,

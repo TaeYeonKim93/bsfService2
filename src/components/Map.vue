@@ -75,29 +75,19 @@
         color="primary"
         @click="toggleChatWindow"
       >
-      <v-icon v-if="!chatExpanded" size="32">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
-    <!-- 손전등 헤드 (빛이 나오는 부분) -->
-    <path d="M8 4h8l2 4H6l2-4z"/>
-    <!-- 손전등 손잡이 -->
-    <rect x="9" y="8" width="6" height="12" rx="1"/>
-  </svg>
-</v-icon>
-        <v-icon v-else size="">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+        <v-icon v-if="!chatExpanded" size="32">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+            <path d="M8 4h8l2 4H6l2-4z"/>
+            <rect x="9" y="8" width="6" height="12" rx="1"/>
           </svg>
         </v-icon>
+        <v-icon v-else>mdi-close</v-icon>
       </v-btn>
       <div class="chat-window" :class="{ 'expanded': chatExpanded }">
         <div class="chat-header">
           <span>(DPG) 손전등 AI 채팅시스템</span>
           <v-btn icon size="small" @click="toggleChatWindow">
-            <v-icon>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-              </svg>
-            </v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </div>
         <div class="chat-messages">
@@ -106,8 +96,7 @@
             <div class="message-avatar">
               {{ msg.type === 'assistant' ? 'AI' : '나' }}
             </div>
-            <div class="message-bubble">
-              {{ msg.content }}
+            <div class="message-bubble" v-html="renderMessage(msg.content)">
             </div>
           </div>
           <div v-if="loading" class="message-container assistant">
@@ -143,6 +132,7 @@ import 위기탐색Icon from '/images/위기탐색.png'
 import 자원탐색Icon from '/images/자원탐색.png'
 import 관리Icon from '/images/관리.png'
 import Papa from 'papaparse';
+import { marked } from 'marked';
 
 declare global {
   interface Window {
@@ -171,7 +161,21 @@ export default defineComponent({
     const chatExpanded = ref(false);
     const userMessage = ref('');
     const selectedButtons = ref<Set<string>>(new Set());
-    const messages = ref<Array<{type: 'user' | 'assistant', content: string}>>([]);
+    const messages = ref<Array<{type: 'user' | 'assistant', content: string}>>([
+      {
+        type: 'assistant',
+        content: `안녕하세요! 저는 지역 위험도 분석, 복지자원 안내 AI 어시스턴트입니다. 
+        
+예시와 같이 질문해 주시면 상세한 분석 결과를 알려드립니다:
+
+- "인천 연수구 위험도와 위험요인 분석해줘"
+- "서울 강남구의 위험도는 어떤가요?"
+- "부산 해운대구 위험요인을 알려주세요"
+- "인천 연수구 복지자원들은 어떤게 있어?"
+
+어떤 지역의 위험도가 궁금하신가요?`
+      }
+    ]);
     const loading = ref(false);
 
     const paginatedData = computed(() => {
@@ -631,7 +635,7 @@ export default defineComponent({
                       if (sidebarData.value.length === 0) {
                         sidebarData.value = [{
                           title: '검색 결과 없음',
-                          description: '해당 지역의 등록된 복지자원이 없습니다.'
+                          description: '해당 지역의 등록된 복지자���이 없습니다.'
                         }];
                       }
                     })
@@ -1019,7 +1023,7 @@ export default defineComponent({
         messages.value.push({ type: 'assistant', content: data.response });
       } catch (error) {
         console.error('Chat error:', error);
-        messages.value.push({ type: 'assistant', content: '죄송합니. 오류가 생했습니다.' });
+        messages.value.push({ type: 'assistant', content: '죄송합니. 오류가 발생했습니다.' });
       } finally {
         loading.value = false;
       }
@@ -1101,6 +1105,17 @@ export default defineComponent({
       }
     };
 
+    // marked 설정 추가
+    marked.setOptions({
+      breaks: true,  // 줄바꿈 활성화
+      gfm: true      // GitHub Flavored Markdown 활성화
+    });
+
+    // 메시지 렌더링을 위한 computed 속성 추가
+    const renderMessage = (content: string) => {
+      return marked(content);
+    };
+
     onMounted(async () => {
       await initMap();
       console.log('Map component mounted');
@@ -1133,7 +1148,8 @@ export default defineComponent({
       messages,
       loading,
       moveToLocation,
-      handleButtonClick
+      handleButtonClick,
+      renderMessage,
     };
   }
 });
@@ -1296,19 +1312,23 @@ export default defineComponent({
 
 .chat-window {
   position: fixed;
-  top: 0;
-  right: -400px;
-  width: 400px;
-  height: 100vh;
+  bottom: -600px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 800px;
+  height: 600px;
   background-color: white;
-  transition: right 0.3s ease;
+  transition: bottom 0.3s ease;
   z-index: 1001;
   display: flex;
   flex-direction: column;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
 }
 
 .chat-window.expanded {
-  right: 0;
+  bottom: 0;
 }
 
 .chat-header {
@@ -1485,6 +1505,53 @@ export default defineComponent({
 
 .clickable-title:hover {
   text-decoration: underline;
+}
+
+/* 마크다운 스타일 추가 */
+.message-bubble :deep(p) {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.message-bubble :deep(code) {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.message-bubble :deep(pre) {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.message-bubble :deep(ul), 
+.message-bubble :deep(ol) {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.message-bubble :deep(li) {
+  margin: 4px 0;
+}
+
+.message-bubble :deep(blockquote) {
+  border-left: 4px solid #ccc;
+  margin: 8px 0;
+  padding-left: 16px;
+  color: #666;
+}
+
+.message-bubble :deep(strong) {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.message-bubble :deep(em) {
+  font-style: italic;
+  color: #34495e;
 }
 </style>
 

@@ -55,9 +55,21 @@ except Exception as e:
 import matplotlib
 matplotlib.use('Agg')
 
-# 한글 폰트 설정
-plt.rcParams['font.family'] = 'NanumGothic'
+# 한글 폰트 설정 (시스템에 설치된 한글 폰트 찾기)
+import matplotlib.font_manager as fm
+
+# 사용 가능한 폰트 목록 출력 (디버깅용)
+print("Available fonts:")
+for font in fm.fontManager.ttflist:
+    print(font.name)
+
+# 한글 폰트 설정 시도
 plt.rcParams['axes.unicode_minus'] = False
+for font in fm.fontManager.ttflist:
+    if any(name in font.name.lower() for name in ['nanum', 'malgun', 'gulim']):
+        plt.rcParams['font.family'] = font.name
+        print(f"Using font: {font.name}")
+        break
 
 # 기본 그래프 설정
 plt.rcParams.update({
@@ -123,14 +135,15 @@ def analyze():
         ax.grid(axis='y', linestyle='--', linewidth=0.5, zorder=1)
         
         shap_values = shap_values_xgb_sample[0].values
-        feature_names = shap_values_xgb_sample[0].feature_names
+        feature_names = [feature_name_map.get(name, name) 
+                        for name in target_sample.filter(regex='^[xa]').columns]
         colors = ['blue' if value > 0 else 'red' for value in shap_values]
         
         ax.barh(range(len(feature_names)), shap_values, color=colors, zorder=2)
         ax.set_yticks(range(len(feature_names)))
-        ax.set_yticklabels(feature_names)
-        ax.set_xlabel("예측에 대한 영향도")
-        ax.set_title(f"특성 중요도 분석\n{target_sido} {target_sigungu}")
+        ax.set_yticklabels(feature_names)  # 한글 이름 사용
+        ax.set_xlabel("가중치")
+        ax.set_title(f"{target_sido} {target_sigungu}의 변수 영향도")
         
         plt.tight_layout()
 

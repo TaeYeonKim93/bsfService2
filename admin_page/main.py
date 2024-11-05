@@ -350,7 +350,7 @@ with col2:
     # 위험지도 섹션
     st.markdown('<div class="section-header">위험 지도</div>', unsafe_allow_html=True)
     st.components.v1.iframe(
-        src="https://localhost/map/mini",
+        src="/map/mini",
         height=300,
         scrolling=False
     )
