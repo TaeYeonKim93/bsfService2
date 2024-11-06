@@ -17,7 +17,12 @@ import os
 app = Flask(__name__)
 CORS(app, resources={
     r"/analyze": {
-        "origins": ["https://localhost", "http://localhost:5173"],
+        "origins": [
+            "https://localhost", 
+            "http://localhost:5173",
+            "https://133.186.251.200",
+            "http://133.186.251.200"
+        ],
         "methods": ["POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Accept"]
     }
