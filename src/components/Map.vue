@@ -522,7 +522,7 @@ export default defineComponent({
           const { latitude, longitude } = position.coords;
           if (map.value) {
             if (userMarker.value) {
-              map.value.removeLayer(userMarker.value);
+              map.value?.removeLayer(userMarker.value);
             }
 
             // 위기탐색 데이터 처리
@@ -541,6 +541,8 @@ export default defineComponent({
                   shadowSize: [41, 41],
                 })
               }).addTo(map.value);
+              
+              fetchSidebarData('위기탐색');
 
               userMarker.value.bindPopup(`
                 <div style="font-family: 'Noto Sans KR', sans-serif;">
@@ -680,7 +682,7 @@ export default defineComponent({
               });
             }
 
-            map.value.setView([latitude, longitude], 14);
+            map.value.setView([latitude, longitude], 14,{ animate: false });
           }
         },
         (error) => {
@@ -887,7 +889,7 @@ export default defineComponent({
                 
                 // 기존 마커 제거
                 if (userMarker.value) {
-                  map.value.removeLayer(userMarker.value);
+                    map.value?.removeLayer(userMarker.value);
                 }
 
                 // 지도 이동 및 마커 생성을 한 번만 실행
@@ -906,7 +908,7 @@ export default defineComponent({
                 
                 // 명시적으로 좌표 지정하여 이동
                 const targetLatLng = L.latLng(coords.lat, coords.lng);
-                map.value.setView(targetLatLng, 14, { animate: false });
+                map.value.setView(targetLatLng, 14, { animate: false },{ animate: false });
                 
                 // 이동 완료 확인
                 const center = map.value.getCenter();
@@ -918,6 +920,7 @@ export default defineComponent({
 
                 // 마커 생성
                 userMarker.value = L.marker([coords.lat, coords.lng]).addTo(map.value);
+                fetchSidebarData('위기탐색');
                 userMarker.value.bindPopup(`
                   <div style="font-family: 'Noto Sans KR', sans-serif;">
                     <b>${data.address}</b><br>
@@ -1110,8 +1113,16 @@ export default defineComponent({
             
             if (coordinates) {
               console.log('지도 이동 시작:', coordinates);
-              map.value.setView([coordinates.lat, coordinates.lng], 14);
+              map.value.setView([coordinates.lat, coordinates.lng], 14, { animate: false },);
               
+              // 기존 마커 제거
+              if (userMarker.value) {
+                  map.value?.removeLayer(userMarker.value);
+              } // 새 마커 생성
+              userMarker.value = L.marker([coordinates.lat, coordinates.lng]).addTo(map.value);
+              
+              fetchSidebarData('위기탐색');
+
               // 해당 위치의 원형 마커 찾기
               map.value.eachLayer((layer: any) => {
                 if (layer instanceof L.Marker) {
@@ -1167,7 +1178,15 @@ export default defineComponent({
         };
 
         console.log('지도 이동 시작:', coordinates);
-        map.value.setView([coordinates.lat, coordinates.lng], 14);
+        map.value.setView([coordinates.lat, coordinates.lng], 14,{ animate: false });
+
+        
+        if (userMarker.value) {
+              map.value?.removeLayer(userMarker.value);
+        }
+        userMarker.value = L.marker([coordinates.lat, coordinates.lng]).addTo(map.value);
+              
+        fetchSidebarData('위기탐색');
         
         // 해당 위치의 원형 마커 찾기
         map.value.eachLayer((layer: any) => {

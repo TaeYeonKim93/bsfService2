@@ -52,6 +52,30 @@ async function initialize() {
 // Thread 저장소
 const userThreads = new Map();
 
+// checkRunStatus 함수 추가
+async function checkRunStatus(threadId, runId) {
+    try {
+        const run = await openai.beta.threads.runs.retrieve(threadId, runId);
+        console.log('Run status check:', {
+            status: run.status,
+            threadId: threadId,
+            runId: runId,
+            startTime: run.started_at,
+            completionTime: run.completed_at
+        });
+        return run;
+    } catch (error) {
+        console.error('Run status check failed:', {
+            error: error.message,
+            type: error.type,
+            threadId: threadId,
+            runId: runId,
+            stack: error.stack
+        });
+        throw error;
+    }
+}
+
 // 채팅 API 엔드포인트
 app.post('/api/chat', async (req, res) => {
   console.log('=== Chat API Request Started ===');
@@ -131,7 +155,7 @@ app.post('/api/chat', async (req, res) => {
       
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Retrieving updated run status...');
-      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+      runStatus = await checkRunStatus(thread.id, run.id);
     }
     
     console.log('Run completed. Getting messages...');
@@ -148,8 +172,29 @@ app.post('/api/chat', async (req, res) => {
     res.json(response);
 
   } catch (error) {
-    console.error('Chat API Error:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Chat API Error:', {
+        message: error.message,
+        type: error.type,
+        status: error.status,
+        code: error.code, 
+        stack: error.stack
+    });
+
+    // 구체적인 에러 타입에 따른 처리
+    if (error.code === 'rate_limit_exceeded') {
+        res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
+    } else if (error.code === 'invalid_api_key') {
+        res.status(401).json({ error: 'Invalid API key.' });
+    } else if (error.code === 'insufficient_quota') {
+        res.status(402).json({ error: 'OpenAI quota exceeded.' });
+    } else if (error.code === 'context_length_exceeded') {
+        res.status(400).json({ error: 'Prompt too long.' });
+    } else {
+        res.status(500).json({ 
+            error: 'An error occurred with the chat service.',
+            details: error.message 
+        });
+    }
   }
 });
 
