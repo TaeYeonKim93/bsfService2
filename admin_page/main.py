@@ -318,7 +318,7 @@ with dpg_container:
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        uploaded_file = st.file_uploader("파일을 선택하세요", type=['csv', 'json', 'xlsx'])
+        uploaded_file = st.file_uploader("파일을 선택하세요", type=['csv', 'json', 'xlsx'],key="file_api_list")
         if uploaded_file is not None:
             if uploaded_file.name.endswith('.csv'):
                 new_data = pd.read_csv(uploaded_file,encoding='euc-kr')
@@ -338,9 +338,8 @@ with dpg_container:
             
             st.write(f"파일 {uploaded_file.name}이(가) DPG_API_list.csv에 추가되었습니다.")
     with col2:
-        uploaded_file = st.file_uploader("세부속성 파일을 선택하세요", type=['csv', 'json', 'xlsx'])
+        uploaded_file = st.file_uploader("세부속성 파일을 선택하세요", type=['csv', 'json', 'xlsx'], key="file_detail")
        
-        uploaded_file = st.file_uploader("파일을 선택하세요", type=['csv', 'json', 'xlsx'])
         if uploaded_file is not None:
             if uploaded_file.name.endswith('.csv'):
                 new_data = pd.read_csv(uploaded_file,encoding='euc-kr')
