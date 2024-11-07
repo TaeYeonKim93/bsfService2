@@ -321,7 +321,7 @@ with dpg_container:
         uploaded_file = st.file_uploader("파일을 선택하세요", type=['csv', 'json', 'xlsx'])
         if uploaded_file is not None:
             if uploaded_file.name.endswith('.csv'):
-                new_data = pd.read_csv(uploaded_file)
+                new_data = pd.read_csv(uploaded_file,encoding='euc-kr')
             elif uploaded_file.name.endswith('.json'):
                 new_data = pd.read_json(uploaded_file)
             elif uploaded_file.name.endswith('.xlsx'):
