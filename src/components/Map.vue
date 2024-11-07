@@ -1066,12 +1066,24 @@ export default defineComponent({
       loading.value = true;
 
       try {
+        // 메시지 내용에 따라 어시스턴트 선택
+        let assistantId = 'asst_UwUD33RMWSw2ZsJwQzv5itYU'; // 기본값 (위험/위기 어시스턴트)
+        
+        if (message.includes('자원')) {
+          assistantId = 'asst_vNHtPk1wDYvRprgiF0rbrifY';
+        } else if (message.includes('위험') || message.includes('위기')) {
+          assistantId = 'asst_UwUD33RMWSw2ZsJwQzv5itYU';
+        }
+
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ message }),
+          body: JSON.stringify({ 
+            message,
+            assistantId // 선택된 어시스턴트 ID 전달
+          }),
         });
 
         if (!response.ok) throw new Error('채팅 요청 실패');

@@ -35,14 +35,21 @@ const openai = new OpenAI({
 });
 
 // Assistant ID 상수 정의
-const ASSISTANT_ID = 'asst_vNHtPk1wDYvRprgiF0rbrifY';
-let assistant;
+const ASSISTANT_IDS = {
+  RESOURCE: 'asst_vNHtPk1wDYvRprgiF0rbrifY',
+  CRISIS: 'asst_UwUD33RMWSw2ZsJwQzv5itYU'
+};
 
-// Assistant 초기화
+// Assistant 초기화 수정
 async function initialize() {
   try {
-    assistant = await openai.beta.assistants.retrieve(ASSISTANT_ID);
-    console.log('Assistant retrieved:', assistant.id);
+    // 두 어시스턴트 모두 초기화
+    const resourceAssistant = await openai.beta.assistants.retrieve(ASSISTANT_IDS.RESOURCE);
+    const crisisAssistant = await openai.beta.assistants.retrieve(ASSISTANT_IDS.CRISIS);
+    console.log('Assistants retrieved:', {
+      resource: resourceAssistant.id,
+      crisis: crisisAssistant.id
+    });
   } catch (error) {
     console.error('Assistant 초기화 실패:', error);
     throw error;
@@ -76,14 +83,20 @@ async function checkRunStatus(threadId, runId) {
     }
 }
 
-// 채팅 API 엔드포인트
+// 채팅 API 엔드포인트 수정
 app.post('/api/chat', async (req, res) => {
   console.log('=== Chat API Request Started ===');
   console.log('Request body:', req.body);
   
   try {
-    const { message } = req.body;
+    const { message, assistantId } = req.body;
     console.log('Received message:', message);
+    console.log('Selected Assistant ID:', assistantId);
+
+    // assistantId 유효성 검사
+    if (!Object.values(ASSISTANT_IDS).includes(assistantId)) {
+      throw new Error('Invalid Assistant ID');
+    }
 
     let thread;
     if (!userThreads.has('default')) {
@@ -102,10 +115,10 @@ app.post('/api/chat', async (req, res) => {
       { role: "user", content: message }
     );
     
-    console.log('Creating new run...');
+    console.log('Creating new run with assistant:', assistantId);
     const run = await openai.beta.threads.runs.create(
       thread.id,
-      { assistant_id: ASSISTANT_ID }
+      { assistant_id: assistantId }  // 선택된 어시스턴트 ID 사용
     );
     console.log('New run created:', run.id);
     
