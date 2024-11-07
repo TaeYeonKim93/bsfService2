@@ -304,7 +304,7 @@ with st.sidebar:
         <a href="#collected-data" style="color: white; text-decoration: none;">• 데이터 현황</a><br><br>
         <a href="#risk-analysis" style="color: white; text-decoration: none;">• 복지 위험도 분석</a><br><br>
         <a href="#ml-status" style="color: white; text-decoration: none;">• 머신러닝 현황</a><br><br>
-        <a href="network3_white_leg.html" target="_blank" style="color: white; text-decoration: none;">• 네트워크 자원 연관도</a>
+        <a href="/network3_white_leg.html" target="_blank" style="color: white; text-decoration: none;">• 네트워크 자원 연관도</a>
         </div>
     ''',
                 unsafe_allow_html=True)
