@@ -1,0 +1,1591 @@
+[
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "동구",
+    "Latitude": 129.059175,
+    "Longitude": 35.13589444,
+    "Result": 0.11042856
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "강서구",
+    "Latitude": 128.9829083,
+    "Longitude": 35.20916389,
+    "Result": 0.06347406
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "연제구",
+    "Latitude": 129.082075,
+    "Longitude": 35.17318611,
+    "Result": 0.060246214
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "수영구",
+    "Latitude": 129.115375,
+    "Longitude": 35.14246667,
+    "Result": 0.07569392
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "기장군",
+    "Latitude": 129.2222873,
+    "Longitude": 35.24477541,
+    "Result": 0.05676371
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "중구",
+    "Latitude": 128.6061745,
+    "Longitude": 35.86952722,
+    "Result": 0.113535166
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "남구",
+    "Latitude": 128.597702,
+    "Longitude": 35.84621351,
+    "Result": 0.0916332
+  },
+  {
+    "Sido": "광주광역시",
+    "Sigungu": "남구",
+    "Latitude": 129.0865,
+    "Longitude": 35.13340833,
+    "Result": 0.051577955
+  },
+  {
+    "Sido": "울산광역시",
+    "Sigungu": "동구",
+    "Latitude": 129.4166919,
+    "Longitude": 35.50516996,
+    "Result": 0.051009774
+  },
+  {
+    "Sido": "울산광역시",
+    "Sigungu": "울주군",
+    "Latitude": 129.2424748,
+    "Longitude": 35.52230648,
+    "Result": 0.056999207
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "김포시",
+    "Latitude": 126.7177778,
+    "Longitude": 37.61245833,
+    "Result": 0.04242073
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "양주시",
+    "Latitude": 127.0478194,
+    "Longitude": 37.78245,
+    "Result": 0.061520815
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "양평군",
+    "Latitude": 127.4898861,
+    "Longitude": 37.48893611,
+    "Result": 0.10429563
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "동해시",
+    "Latitude": 129.1166333,
+    "Longitude": 37.52193056,
+    "Result": 0.08070609
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "태백시",
+    "Latitude": 128.9879972,
+    "Longitude": 37.16122778,
+    "Result": 0.12213245
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "삼척시",
+    "Latitude": 129.1674889,
+    "Longitude": 37.44708611,
+    "Result": 0.118498564
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "홍천군",
+    "Latitude": 127.8908417,
+    "Longitude": 37.69442222,
+    "Result": 0.114007354
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "횡성군",
+    "Latitude": 127.9872222,
+    "Longitude": 37.48895833,
+    "Result": 0.14392768
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "영월군",
+    "Latitude": 128.4640194,
+    "Longitude": 37.18086111,
+    "Result": 0.15276343
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "평창군",
+    "Latitude": 128.3923528,
+    "Longitude": 37.36791667,
+    "Result": 0.15796694
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "정선군",
+    "Latitude": 128.6630861,
+    "Longitude": 37.37780833,
+    "Result": 0.1519831
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "철원군",
+    "Latitude": 127.3157333,
+    "Longitude": 38.14405556,
+    "Result": 0.118136466
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "화천군",
+    "Latitude": 127.7103556,
+    "Longitude": 38.10340833,
+    "Result": 0.1543718
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "양구군",
+    "Latitude": 127.9922444,
+    "Longitude": 38.10729167,
+    "Result": 0.16210635
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "인제군",
+    "Latitude": 128.1726972,
+    "Longitude": 38.06697222,
+    "Result": 0.14191158
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "고성군",
+    "Latitude": 128.4701639,
+    "Longitude": 38.37796111,
+    "Result": 0.1589233
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "보은군",
+    "Latitude": 127.7316083,
+    "Longitude": 36.48653333,
+    "Result": 0.143741
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "영동군",
+    "Latitude": 127.7856111,
+    "Longitude": 36.17205833,
+    "Result": 0.13092569
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "진천군",
+    "Latitude": 127.4376444,
+    "Longitude": 36.85253889,
+    "Result": 0.09072843
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "괴산군",
+    "Latitude": 127.7888306,
+    "Longitude": 36.81243056,
+    "Result": 0.15729353
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "음성군",
+    "Latitude": 127.6926222,
+    "Longitude": 36.93740556,
+    "Result": 0.115985155
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "단양군",
+    "Latitude": 128.3678417,
+    "Longitude": 36.98178056,
+    "Result": 0.15447824
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "증평군",
+    "Latitude": 127.5832889,
+    "Longitude": 36.78218056,
+    "Result": 0.110948354
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "보령시",
+    "Latitude": 126.6148861,
+    "Longitude": 36.330575,
+    "Result": 0.09131241
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "계룡시",
+    "Latitude": 127.2509306,
+    "Longitude": 36.27183611,
+    "Result": 0.097014815
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "부여군",
+    "Latitude": 126.9118639,
+    "Longitude": 36.27282222,
+    "Result": 0.11776537
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "서천군",
+    "Latitude": 126.6938889,
+    "Longitude": 36.07740556,
+    "Result": 0.12658577
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "청양군",
+    "Latitude": 126.8042556,
+    "Longitude": 36.45626944,
+    "Result": 0.15140465
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "홍성군",
+    "Latitude": 126.6629083,
+    "Longitude": 36.59836111,
+    "Result": 0.08764592
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "예산군",
+    "Latitude": 126.850875,
+    "Longitude": 36.67980556,
+    "Result": 0.106687784
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "태안군",
+    "Latitude": 126.299975,
+    "Longitude": 36.74266667,
+    "Result": 0.12069279
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "익산시",
+    "Latitude": 126.9598528,
+    "Longitude": 35.945275,
+    "Result": 0.05590017
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "정읍시",
+    "Latitude": 126.8581111,
+    "Longitude": 35.56687222,
+    "Result": 0.08943878
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "김제시",
+    "Latitude": 126.8827528,
+    "Longitude": 35.800575,
+    "Result": 0.10631642
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "완주군",
+    "Latitude": 127.1495972,
+    "Longitude": 35.84296944,
+    "Result": 0.090768754
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "진안군",
+    "Latitude": 127.4269667,
+    "Longitude": 35.78871944,
+    "Result": 0.1694918
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "무주군",
+    "Latitude": 127.6628667,
+    "Longitude": 36.00382778,
+    "Result": 0.16717514
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "장수군",
+    "Latitude": 127.5233,
+    "Longitude": 35.64429722,
+    "Result": 0.1651313
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "고창군",
+    "Latitude": 126.7041083,
+    "Longitude": 35.43273889,
+    "Result": 0.124452844
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "목포시",
+    "Latitude": 126.3944194,
+    "Longitude": 34.80878889,
+    "Result": 0.057892457
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "나주시",
+    "Latitude": 126.7128667,
+    "Longitude": 35.01283889,
+    "Result": 0.09251687
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "담양군",
+    "Latitude": 126.9901639,
+    "Longitude": 35.318125,
+    "Result": 0.15015548
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "곡성군",
+    "Latitude": 127.2941083,
+    "Longitude": 35.27895556,
+    "Result": 0.16425395
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "구례군",
+    "Latitude": 127.4649333,
+    "Longitude": 35.19945833,
+    "Result": 0.15770155
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "고흥군",
+    "Latitude": 127.2870556,
+    "Longitude": 34.60806944,
+    "Result": 0.12513322
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "보성군",
+    "Latitude": 127.0820889,
+    "Longitude": 34.76833333,
+    "Result": 0.16246556
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "화순군",
+    "Latitude": 126.9885667,
+    "Longitude": 35.06148056,
+    "Result": 0.11293271
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "장흥군",
+    "Latitude": 126.9091083,
+    "Longitude": 34.678525,
+    "Result": 0.15364046
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "강진군",
+    "Latitude": 126.7691972,
+    "Longitude": 34.63891111,
+    "Result": 0.14431089
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "해남군",
+    "Latitude": 126.6012889,
+    "Longitude": 34.57043611,
+    "Result": 0.117186844
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "영암군",
+    "Latitude": 126.6986194,
+    "Longitude": 34.79698889,
+    "Result": 0.12648326
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "무안군",
+    "Latitude": 126.4837,
+    "Longitude": 34.98736944,
+    "Result": 0.092405036
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "함평군",
+    "Latitude": 126.5186194,
+    "Longitude": 35.06274444,
+    "Result": 0.160241
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "영광군",
+    "Latitude": 126.5140861,
+    "Longitude": 35.27416667,
+    "Result": 0.12459901
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "장성군",
+    "Latitude": 126.786975,
+    "Longitude": 35.29881111,
+    "Result": 0.10215214
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "완도군",
+    "Latitude": 126.7570972,
+    "Longitude": 34.30785278,
+    "Result": 0.12281944
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "진도군",
+    "Latitude": 126.2655444,
+    "Longitude": 34.48375,
+    "Result": 0.15323919
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "신안군",
+    "Latitude": 126.3817306,
+    "Longitude": 34.78981111,
+    "Result": 0.15403643
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "포항시",
+    "Latitude": 129.3616667,
+    "Longitude": 36.00568611,
+    "Result": 0.050191134
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "영주시",
+    "Latitude": 128.6263444,
+    "Longitude": 36.80293611,
+    "Result": 0.09245649
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "영천시",
+    "Latitude": 128.940775,
+    "Longitude": 35.97005278,
+    "Result": 0.11656842
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "군위군",
+    "Latitude": 128.5750778,
+    "Longitude": 36.23999722,
+    "Result": 0.18336698
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "의성군",
+    "Latitude": 128.6993639,
+    "Longitude": 36.34975833,
+    "Result": 0.16768524
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "청송군",
+    "Latitude": 129.0594,
+    "Longitude": 36.43329167,
+    "Result": 0.17977834
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "영양군",
+    "Latitude": 129.1146222,
+    "Longitude": 36.664275,
+    "Result": 0.170683
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "영덕군",
+    "Latitude": 129.3683556,
+    "Longitude": 36.41210278,
+    "Result": 0.15811463
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "청도군",
+    "Latitude": 128.7362,
+    "Longitude": 35.64431111,
+    "Result": 0.16002467
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "고령군",
+    "Latitude": 128.2650222,
+    "Longitude": 35.72298611,
+    "Result": 0.15945257
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "성주군",
+    "Latitude": 128.2851528,
+    "Longitude": 35.91621111,
+    "Result": 0.16042855
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "칠곡군",
+    "Latitude": 128.4037972,
+    "Longitude": 35.99254722,
+    "Result": 0.072812706
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "예천군",
+    "Latitude": 128.4550222,
+    "Longitude": 36.65495,
+    "Result": 0.119822055
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "봉화군",
+    "Latitude": 128.734875,
+    "Longitude": 36.89026111,
+    "Result": 0.16600835
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "울진군",
+    "Latitude": 129.4027861,
+    "Longitude": 36.99018611,
+    "Result": 0.1358241
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "울릉군",
+    "Latitude": 130.9037889,
+    "Longitude": 37.480575,
+    "Result": 0.18318504
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "진주시",
+    "Latitude": 128.11,
+    "Longitude": 35.17703333,
+    "Result": 0.07340306
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "사천시",
+    "Latitude": 128.0667778,
+    "Longitude": 35.00028333,
+    "Result": 0.078495204
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "밀양시",
+    "Latitude": 128.7489444,
+    "Longitude": 35.50077778,
+    "Result": 0.10390405
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "거제시",
+    "Latitude": 128.6233556,
+    "Longitude": 34.87735833,
+    "Result": 0.045605063
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "의령군",
+    "Latitude": 128.2638222,
+    "Longitude": 35.31911944,
+    "Result": 0.17544258
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "함안군",
+    "Latitude": 128.4087083,
+    "Longitude": 35.26940556,
+    "Result": 0.11649518
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "창녕군",
+    "Latitude": 128.4945333,
+    "Longitude": 35.54153611,
+    "Result": 0.13728157
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "남해군",
+    "Latitude": 127.8944667,
+    "Longitude": 34.83455833,
+    "Result": 0.14572813
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "하동군",
+    "Latitude": 127.7534306,
+    "Longitude": 35.06420278,
+    "Result": 0.14953145
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "산청군",
+    "Latitude": 127.8756194,
+    "Longitude": 35.41249167,
+    "Result": 0.1517447
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "함양군",
+    "Latitude": 127.7274194,
+    "Longitude": 35.51746944,
+    "Result": 0.16208431
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "거창군",
+    "Latitude": 127.9116556,
+    "Longitude": 35.683625,
+    "Result": 0.11742614
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "합천군",
+    "Latitude": 128.1679306,
+    "Longitude": 35.56361667,
+    "Result": 0.1693945
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "종로구",
+    "Latitude": 126.9816417,
+    "Longitude": 37.57037778,
+    "Result": 0.11357358
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "중구",
+    "Latitude": 126.9996417,
+    "Longitude": 37.56100278,
+    "Result": 0.13132086
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "용산구",
+    "Latitude": 126.9675222,
+    "Longitude": 37.53609444,
+    "Result": 0.12222707
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "성동구",
+    "Latitude": 127.039,
+    "Longitude": 37.56061111,
+    "Result": 0.12631987
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "광진구",
+    "Latitude": 127.0845333,
+    "Longitude": 37.53573889,
+    "Result": 0.17871061
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "동대문구",
+    "Latitude": 127.0421417,
+    "Longitude": 37.571625,
+    "Result": 0.18297008
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "중랑구",
+    "Latitude": 127.0947778,
+    "Longitude": 37.60380556,
+    "Result": 0.13873482
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "성북구",
+    "Latitude": 127.0203333,
+    "Longitude": 37.58638333,
+    "Result": 0.11582351
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "강북구",
+    "Latitude": 127.0277194,
+    "Longitude": 37.63695556,
+    "Result": 0.14992847
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "도봉구",
+    "Latitude": 127.0495222,
+    "Longitude": 37.66583333,
+    "Result": 0.06690623
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "노원구",
+    "Latitude": 127.0583889,
+    "Longitude": 37.65146111,
+    "Result": 0.07173766
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "은평구",
+    "Latitude": 126.9312417,
+    "Longitude": 37.59996944,
+    "Result": 0.10132691
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "서대문구",
+    "Latitude": 126.9388972,
+    "Longitude": 37.57636667,
+    "Result": 0.15120986
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "마포구",
+    "Latitude": 126.9105306,
+    "Longitude": 37.56070556,
+    "Result": 0.13282649
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "양천구",
+    "Latitude": 126.8687083,
+    "Longitude": 37.51423056,
+    "Result": 0.059491545
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "강서구",
+    "Latitude": 126.851675,
+    "Longitude": 37.54815556,
+    "Result": 0.0745911
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "구로구",
+    "Latitude": 126.8895972,
+    "Longitude": 37.49265,
+    "Result": 0.107700944
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "금천구",
+    "Latitude": 126.9041972,
+    "Longitude": 37.44910833,
+    "Result": 0.12882164
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "영등포구",
+    "Latitude": 126.8983417,
+    "Longitude": 37.52361111,
+    "Result": 0.13860202
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "동작구",
+    "Latitude": 126.941575,
+    "Longitude": 37.50965556,
+    "Result": 0.17198828
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "관악구",
+    "Latitude": 126.9538444,
+    "Longitude": 37.47538611,
+    "Result": 0.21024767
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "서초구",
+    "Latitude": 127.0348111,
+    "Longitude": 37.48078611,
+    "Result": 0.08528465
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "강남구",
+    "Latitude": 127.0495556,
+    "Longitude": 37.514575,
+    "Result": 0.05346717
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "송파구",
+    "Latitude": 127.1079306,
+    "Longitude": 37.51175556,
+    "Result": 0.05924177
+  },
+  {
+    "Sido": "서울특별시",
+    "Sigungu": "강동구",
+    "Latitude": 127.1258639,
+    "Longitude": 37.52736667,
+    "Result": 0.09426683
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "중구",
+    "Latitude": 129.0345083,
+    "Longitude": 35.10321667,
+    "Result": 0.15685317
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "서구",
+    "Latitude": 129.0263778,
+    "Longitude": 35.09483611,
+    "Result": 0.101103425
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "영도구",
+    "Latitude": 129.0701861,
+    "Longitude": 35.08811667,
+    "Result": 0.08786839
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "부산진구",
+    "Latitude": 129.0553194,
+    "Longitude": 35.15995278,
+    "Result": 0.15292272
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "동래구",
+    "Latitude": 129.0858556,
+    "Longitude": 35.20187222,
+    "Result": 0.045795977
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "남구",
+    "Latitude": 129.0865,
+    "Longitude": 35.13340833,
+    "Result": 0.051577955
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "북구",
+    "Latitude": 128.992475,
+    "Longitude": 35.19418056,
+    "Result": 0.040665373
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "해운대구",
+    "Latitude": 129.1658083,
+    "Longitude": 35.16001944,
+    "Result": 0.042317584
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "사하구",
+    "Latitude": 128.9770417,
+    "Longitude": 35.10142778,
+    "Result": 0.050990745
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "금정구",
+    "Latitude": 129.0943194,
+    "Longitude": 35.24007778,
+    "Result": 0.0688726
+  },
+  {
+    "Sido": "부산광역시",
+    "Sigungu": "사상구",
+    "Latitude": 128.9933333,
+    "Longitude": 35.14946667,
+    "Result": 0.069557965
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "동구",
+    "Latitude": 128.6355584,
+    "Longitude": 35.88682728,
+    "Result": 0.062346295
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "서구",
+    "Latitude": 128.5591601,
+    "Longitude": 35.87194054,
+    "Result": 0.07950054
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "북구",
+    "Latitude": 128.5828924,
+    "Longitude": 35.8858646,
+    "Result": 0.051753625
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "수성구",
+    "Latitude": 128.6328667,
+    "Longitude": 35.85520833,
+    "Result": 0.035150565
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "달서구",
+    "Latitude": 128.5350639,
+    "Longitude": 35.82692778,
+    "Result": 0.047492325
+  },
+  {
+    "Sido": "대구광역시",
+    "Sigungu": "달성군",
+    "Latitude": 128.4313995,
+    "Longitude": 35.77475029,
+    "Result": 0.047250375
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "중구",
+    "Latitude": 126.6217617,
+    "Longitude": 37.47384843,
+    "Result": 0.1062358
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "동구",
+    "Latitude": 126.6432441,
+    "Longitude": 37.47401607,
+    "Result": 0.10485223
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "연수구",
+    "Latitude": 126.6782658,
+    "Longitude": 37.41038125,
+    "Result": 0.06663063
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "남동구",
+    "Latitude": 126.7309669,
+    "Longitude": 37.44971062,
+    "Result": 0.06629953
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "부평구",
+    "Latitude": 126.7219068,
+    "Longitude": 37.50784204,
+    "Result": 0.07565895
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "계양구",
+    "Latitude": 126.737744,
+    "Longitude": 37.53770728,
+    "Result": 0.053729758
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "서구",
+    "Latitude": 126.6759616,
+    "Longitude": 37.54546372,
+    "Result": 0.07860345
+  },
+  {
+    "Sido": "인천광역시",
+    "Sigungu": "강화군",
+    "Latitude": 126.4878417,
+    "Longitude": 37.74692907,
+    "Result": 0.116874784
+  },
+  {
+    "Sido": "광주광역시",
+    "Sigungu": "동구",
+    "Latitude": 126.9230903,
+    "Longitude": 35.14627776,
+    "Result": 0.09770247
+  },
+  {
+    "Sido": "광주광역시",
+    "Sigungu": "서구",
+    "Latitude": 126.8895063,
+    "Longitude": 35.1525164,
+    "Result": 0.055598944
+  },
+  {
+    "Sido": "광주광역시",
+    "Sigungu": "북구",
+    "Latitude": 126.9010806,
+    "Longitude": 35.1812138,
+    "Result": 0.052099228
+  },
+  {
+    "Sido": "광주광역시",
+    "Sigungu": "광산구",
+    "Latitude": 126.793668,
+    "Longitude": 35.13995836,
+    "Result": 0.043656617
+  },
+  {
+    "Sido": "대전광역시",
+    "Sigungu": "동구",
+    "Latitude": 127.4548596,
+    "Longitude": 36.31204028,
+    "Result": 0.107117206
+  },
+  {
+    "Sido": "대전광역시",
+    "Sigungu": "중구",
+    "Latitude": 127.421381,
+    "Longitude": 36.32582989,
+    "Result": 0.053450346
+  },
+  {
+    "Sido": "대전광역시",
+    "Sigungu": "서구",
+    "Latitude": 127.3834158,
+    "Longitude": 36.35707299,
+    "Result": 0.06567964
+  },
+  {
+    "Sido": "대전광역시",
+    "Sigungu": "유성구",
+    "Latitude": 127.3561363,
+    "Longitude": 36.36405586,
+    "Result": 0.088995546
+  },
+  {
+    "Sido": "대전광역시",
+    "Sigungu": "대덕구",
+    "Latitude": 127.4170933,
+    "Longitude": 36.35218384,
+    "Result": 0.05729483
+  },
+  {
+    "Sido": "울산광역시",
+    "Sigungu": "중구",
+    "Latitude": 129.3328162,
+    "Longitude": 35.56971228,
+    "Result": 0.05120793
+  },
+  {
+    "Sido": "울산광역시",
+    "Sigungu": "남구",
+    "Latitude": 129.3301754,
+    "Longitude": 35.54404265,
+    "Result": 0.037604153
+  },
+  {
+    "Sido": "울산광역시",
+    "Sigungu": "북구",
+    "Latitude": 129.361245,
+    "Longitude": 35.58270783,
+    "Result": 0.044742346
+  },
+  {
+    "Sido": "세종",
+    "Sigungu": "세종시",
+    "Latitude": 127.2494855,
+    "Longitude": 36.5040736,
+    "Result": 0.047385544
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "수원시",
+    "Latitude": 127.0122222,
+    "Longitude": 37.30101111,
+    "Result": 0.06314179
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "성남시",
+    "Latitude": 127.1477194,
+    "Longitude": 37.44749167,
+    "Result": 0.05801779
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "의정부시",
+    "Latitude": 127.0358417,
+    "Longitude": 37.73528889,
+    "Result": 0.064918846
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "안양시",
+    "Latitude": 126.9533556,
+    "Longitude": 37.3897,
+    "Result": 0.07087296
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "부천시",
+    "Latitude": 126.766,
+    "Longitude": 37.5035917,
+    "Result": 0.06756812
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "광명시",
+    "Latitude": 126.8667083,
+    "Longitude": 37.47575,
+    "Result": 0.061026514
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "평택시",
+    "Latitude": 127.1146556,
+    "Longitude": 36.98943889,
+    "Result": 0.0625654
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "동두천시",
+    "Latitude": 127.0626528,
+    "Longitude": 37.90091667,
+    "Result": 0.090691596
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "안산시",
+    "Latitude": 126.8468194,
+    "Longitude": 37.29851944,
+    "Result": 0.07468061
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "고양시",
+    "Latitude": 126.7770556,
+    "Longitude": 37.65590833,
+    "Result": 0.0540161
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "과천시",
+    "Latitude": 126.9898,
+    "Longitude": 37.42637222,
+    "Result": 0.11096844
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "구리시",
+    "Latitude": 127.1318639,
+    "Longitude": 37.591625,
+    "Result": 0.0675486
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "남양주시",
+    "Latitude": 127.2186333,
+    "Longitude": 37.63317778,
+    "Result": 0.05033812
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "오산시",
+    "Latitude": 127.0796417,
+    "Longitude": 37.14691389,
+    "Result": 0.08396578
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "시흥시",
+    "Latitude": 126.8050778,
+    "Longitude": 37.37731944,
+    "Result": 0.056476504
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "군포시",
+    "Latitude": 126.9375,
+    "Longitude": 37.35865833,
+    "Result": 0.05290264
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "의왕시",
+    "Latitude": 126.9703889,
+    "Longitude": 37.34195,
+    "Result": 0.060046017
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "하남시",
+    "Latitude": 127.217,
+    "Longitude": 37.53649722,
+    "Result": 0.051953316
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "용인시",
+    "Latitude": 127.2038444,
+    "Longitude": 37.23147778,
+    "Result": 0.050860047
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "파주시",
+    "Latitude": 126.7819528,
+    "Longitude": 37.75708333,
+    "Result": 0.066021994
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "이천시",
+    "Latitude": 127.4432194,
+    "Longitude": 37.27543611,
+    "Result": 0.0734207
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "안성시",
+    "Latitude": 127.2818444,
+    "Longitude": 37.005175,
+    "Result": 0.081006885
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "화성시",
+    "Latitude": 126.8335306,
+    "Longitude": 37.19681667,
+    "Result": 0.05952534
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "광주시",
+    "Latitude": 127.2577861,
+    "Longitude": 37.41450556,
+    "Result": 0.07339281
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "포천시",
+    "Latitude": 127.2024194,
+    "Longitude": 37.89215556,
+    "Result": 0.1019239
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "여주시",
+    "Latitude": 127.6396222,
+    "Longitude": 37.29535833,
+    "Result": 0.099630594
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "연천군",
+    "Latitude": 127.0770667,
+    "Longitude": 38.09336389,
+    "Result": 0.14290786
+  },
+  {
+    "Sido": "경기도",
+    "Sigungu": "가평군",
+    "Latitude": 127.5117778,
+    "Longitude": 37.82883056,
+    "Result": 0.119784534
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "춘천시",
+    "Latitude": 127.7323111,
+    "Longitude": 37.87854167,
+    "Result": 0.06987676
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "원주시",
+    "Latitude": 127.9220556,
+    "Longitude": 37.33908333,
+    "Result": 0.077930674
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "강릉시",
+    "Latitude": 128.8784972,
+    "Longitude": 37.74913611,
+    "Result": 0.071839616
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "속초시",
+    "Latitude": 128.5941667,
+    "Longitude": 38.204275,
+    "Result": 0.09599322
+  },
+  {
+    "Sido": "강원도",
+    "Sigungu": "양양군",
+    "Latitude": 128.6213556,
+    "Longitude": 38.07283333,
+    "Result": 0.15785027
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "충주시",
+    "Latitude": 127.9281444,
+    "Longitude": 36.98818056,
+    "Result": 0.06728372
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "제천시",
+    "Latitude": 128.1931528,
+    "Longitude": 37.12976944,
+    "Result": 0.08235647
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "청주시",
+    "Latitude": 127.5117306,
+    "Longitude": 36.58399722,
+    "Result": 0.052737474
+  },
+  {
+    "Sido": "충청북도",
+    "Sigungu": "옥천군",
+    "Latitude": 127.5736333,
+    "Longitude": 36.30355,
+    "Result": 0.117447615
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "천안시",
+    "Latitude": 127.1524667,
+    "Longitude": 36.804125,
+    "Result": 0.051042482
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "공주시",
+    "Latitude": 127.1211194,
+    "Longitude": 36.44361389,
+    "Result": 0.09789069
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "아산시",
+    "Latitude": 127.0046417,
+    "Longitude": 36.78710556,
+    "Result": 0.07293476
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "서산시",
+    "Latitude": 126.4521639,
+    "Longitude": 36.78209722,
+    "Result": 0.063901186
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "논산시",
+    "Latitude": 127.1009111,
+    "Longitude": 36.18420278,
+    "Result": 0.09181136
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "당진시",
+    "Latitude": 126.6302528,
+    "Longitude": 36.89075,
+    "Result": 0.074202776
+  },
+  {
+    "Sido": "충청남도",
+    "Sigungu": "금산군",
+    "Latitude": 127.4903083,
+    "Longitude": 36.10586944,
+    "Result": 0.13556957
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "전주시",
+    "Latitude": 127.1219194,
+    "Longitude": 35.80918889,
+    "Result": 0.048928946
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "군산시",
+    "Latitude": 126.7388444,
+    "Longitude": 35.96464167,
+    "Result": 0.04611653
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "남원시",
+    "Latitude": 127.3925,
+    "Longitude": 35.41325556,
+    "Result": 0.105852485
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "임실군",
+    "Latitude": 127.2847528,
+    "Longitude": 35.60806389,
+    "Result": 0.16264457
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "순창군",
+    "Latitude": 127.1396306,
+    "Longitude": 35.37138889,
+    "Result": 0.14936629
+  },
+  {
+    "Sido": "전라북도",
+    "Sigungu": "부안군",
+    "Latitude": 126.7356778,
+    "Longitude": 35.72853333,
+    "Result": 0.11950049
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "여수시",
+    "Latitude": 127.6643861,
+    "Longitude": 34.75731111,
+    "Result": 0.04631844
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "순천시",
+    "Latitude": 127.4893306,
+    "Longitude": 34.94760556,
+    "Result": 0.043946162
+  },
+  {
+    "Sido": "전라남도",
+    "Sigungu": "광양시",
+    "Latitude": 127.6981778,
+    "Longitude": 34.93753611,
+    "Result": 0.0585351
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "경주시",
+    "Latitude": 129.2270222,
+    "Longitude": 35.85316944,
+    "Result": 0.07458794
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "김천시",
+    "Latitude": 128.1158,
+    "Longitude": 36.13689722,
+    "Result": 0.0827899
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "안동시",
+    "Latitude": 128.7316222,
+    "Longitude": 36.56546389,
+    "Result": 0.08998367
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "구미시",
+    "Latitude": 128.3467778,
+    "Longitude": 36.11655,
+    "Result": 0.053112
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "상주시",
+    "Latitude": 128.1612639,
+    "Longitude": 36.40796944,
+    "Result": 0.11561154
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "문경시",
+    "Latitude": 128.1890194,
+    "Longitude": 36.58363056,
+    "Result": 0.115403235
+  },
+  {
+    "Sido": "경상북도",
+    "Sigungu": "경산시",
+    "Latitude": 128.7434639,
+    "Longitude": 35.82208889,
+    "Result": 0.06746049
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "통영시",
+    "Latitude": 128.4352778,
+    "Longitude": 34.85125833,
+    "Result": 0.072237894
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "김해시",
+    "Latitude": 128.8916667,
+    "Longitude": 35.22550556,
+    "Result": 0.049985602
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "양산시",
+    "Latitude": 129.0394111,
+    "Longitude": 35.33192778,
+    "Result": 0.032929458
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "창원시",
+    "Latitude": 128.6401544,
+    "Longitude": 35.2540033,
+    "Result": 0.06263241
+  },
+  {
+    "Sido": "경상남도",
+    "Sigungu": "고성군",
+    "Latitude": 128.3245417,
+    "Longitude": 34.9699,
+    "Result": 0.12960489
+  },
+  {
+    "Sido": "제주",
+    "Sigungu": "제주시",
+    "Latitude": 126.5332083,
+    "Longitude": 33.49631111,
+    "Result": 0.07675493
+  },
+  {
+    "Sido": "제주",
+    "Sigungu": "서귀포시",
+    "Latitude": 126.5125556,
+    "Longitude": 33.25235,
+    "Result": 0.10587484
+  }
+]
