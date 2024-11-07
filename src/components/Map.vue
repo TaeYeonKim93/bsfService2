@@ -210,7 +210,7 @@ export default defineComponent({
             complete: (results) => {
               // 데이터 정규화 및 색상 적용
               const validData = results.data.map((row: any) => {
-                const normalizedResult = (parseFloat(row.Result) * 100;
+                const normalizedResult = (parseFloat(row.Result)) * 100;
                 return {
                   ...row,
                   Result: normalizedResult,
@@ -230,10 +230,10 @@ export default defineComponent({
 
     // 위험도에 따른 색상 계 함수 수정
     const getRiskColor = (normalizedResult: number) => {
-      if (normalizedResult >= 80) return '#FF0000';       // 빨강 (매우 높음)
-      if (normalizedResult >= 60) return '#FF4500';       // 주황빨강 (높음)
-      if (normalizedResult >= 40) return '#FFA500';       // 주황 (중간)
-      if (normalizedResult >= 20) return '#FFD700';       // 황금색 (낮음)
+      if (normalizedResult >= 16) return '#FF0000';       // 빨강 (매우 높음)
+      if (normalizedResult >= 12) return '#FF4500';       // 주황빨강 (높음)
+      if (normalizedResult >= 8) return '#FFA500';       // 주황 (중간)
+      if (normalizedResult >= 4) return '#FFD700';       // 황금색 (낮음)
       return '#FFEB3B';                                   // 연한 노랑 (매우 낮음)
     };
 
@@ -467,10 +467,10 @@ export default defineComponent({
     };
 
     const getRiskLevel = (normalizedResult: number) => {
-      if (normalizedResult >= 80) return '매우 높음';
-      if (normalizedResult >= 60) return '높음';
-      if (normalizedResult >= 40) return '중간';
-      if (normalizedResult >= 20) return '낮음';
+      if (normalizedResult >= 16) return '매우 높음';
+      if (normalizedResult >= 12) return '높음';
+      if (normalizedResult >= 8) return '중간';
+      if (normalizedResult >= 4) return '낮음';
       return '매우 낮음';
     };
 

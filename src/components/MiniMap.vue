@@ -25,12 +25,8 @@
               header: true,
               skipEmptyLines: true,
               complete: (results) => {
-                const values = results.data.map((row: any) => parseFloat(row.Result));
-                const maxResult = Math.max(...values);
-                const minResult = Math.min(...values);
-  
                 const validData = results.data.map((row: any) => {
-                  const normalizedResult = ((parseFloat(row.Result) - minResult) / (maxResult - minResult)) * 100;
+                  const normalizedResult = (parseFloat(row.Result)) * 100;
                   return {
                     ...row,
                     Result: normalizedResult,
@@ -49,10 +45,10 @@
       };
   
       const getRiskColor = (normalizedResult: number) => {
-        if (normalizedResult >= 80) return '#FF0000';
-        if (normalizedResult >= 60) return '#FF4500';
-        if (normalizedResult >= 40) return '#FFA500';
-        if (normalizedResult >= 20) return '#FFD700';
+        if (normalizedResult >= 16) return '#FF0000';
+        if (normalizedResult >= 12) return '#FF4500';
+        if (normalizedResult >= 8) return '#FFA500';
+        if (normalizedResult >= 4) return '#FFD700';
         return '#FFEB3B';
       };
   
