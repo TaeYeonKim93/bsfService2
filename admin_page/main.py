@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 import streamlit as st
 import datetime
 import pandas as pd
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 import openai
 import os
@@ -22,6 +24,12 @@ if not OPENAI_API_KEY:
     st.stop()  # API 키가 없으면 여기서 실행 중단
 else:
     openai.api_key = OPENAI_API_KEY
+
+
+app = FastAPI()
+# 정적 파일 서빙
+app.mount("/", StaticFiles(directory="data"), name="static")
+
 
 # CSS styling with enhanced Korean font support
 st.markdown("""
@@ -296,7 +304,7 @@ with st.sidebar:
         <a href="#collected-data" style="color: white; text-decoration: none;">• 데이터 현황</a><br><br>
         <a href="#risk-analysis" style="color: white; text-decoration: none;">• 복지 위험도 분석</a><br><br>
         <a href="#ml-status" style="color: white; text-decoration: none;">• 머신러닝 현황</a><br><br>
-        <a href="/app/data/network3_white_leg.html" target="_blank" style="color: white; text-decoration: none;">• 네트워크 자원 연관도</a>
+        <a href="network3_white_leg.html" target="_blank" style="color: white; text-decoration: none;">• 네트워크 자원 연관도</a>
         </div>
     ''',
                 unsafe_allow_html=True)
