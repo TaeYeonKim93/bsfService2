@@ -295,7 +295,8 @@ with st.sidebar:
         <a href="#dpg-api" style="color: white; text-decoration: none;">• API 목록 조회</a><br><br>
         <a href="#collected-data" style="color: white; text-decoration: none;">• 데이터 현황</a><br><br>
         <a href="#risk-analysis" style="color: white; text-decoration: none;">• 복지 위험도 분석</a><br><br>
-        <a href="#ml-status" style="color: white; text-decoration: none;">• 머신러닝 현황</a>
+        <a href="#ml-status" style="color: white; text-decoration: none;">• 머신러닝 현황</a><br><br>
+        <a href="/app/data/network3_white_leg.html" target="_blank" style="color: white; text-decoration: none;">• 네트워크 자원 연관도</a>
         </div>
     ''',
                 unsafe_allow_html=True)
@@ -656,7 +657,7 @@ with ml_status_container:
             # Grid 옵션 설정
             gb = GridOptionsBuilder.from_dataframe(model_info_df)
             
-            # 컬럼 설정
+            # 컬�� 설정
             gb.configure_column('모델명', header_name="모델명", width=200)
             gb.configure_column('파일명', header_name="파일명", width=200)
             gb.configure_column('용도', header_name="용도", width=300)
