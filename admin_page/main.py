@@ -441,9 +441,6 @@ with api_status_container:
         # 경로와 인코딩 수정
         risk_data = pd.read_csv('./data/Find_sigungu_with_sido_sigungu.csv', encoding='euc-kr')
         
-        # 최대 위험도 값 구하기
-        max_risk = risk_data['Result'].max()
-        
         # 위험도 기준으로 정렬
         risk_data = risk_data.sort_values('Result', ascending=False)
         
@@ -464,7 +461,7 @@ with api_status_container:
             # 상위 5개 지역을 선택 가능한 버튼으로 표시
             for _, row in top_5.iterrows():
                 # 상대적 위험도 퍼센트 계산
-                risk_percent = (row['Result'] / max_risk) * 100
+                risk_percent = row['Result'] * 100
                 if st.button(f"🔴 {row['Sido']} {row['Sigungu']} - 위험도: {risk_percent:.1f}%", 
                            key=f"top_{row['Sigungu']}",
                            help="클릭하여 상세 분석 보기"):

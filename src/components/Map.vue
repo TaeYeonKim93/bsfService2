@@ -208,14 +208,9 @@ export default defineComponent({
             header: true,
             skipEmptyLines: true,
             complete: (results) => {
-              // 최대값과 최소값 찾기
-              const values = results.data.map((row: any) => parseFloat(row.Result));
-              const maxResult = Math.max(...values);
-              const minResult = Math.min(...values);
-
               // 데이터 정규화 및 색상 적용
               const validData = results.data.map((row: any) => {
-                const normalizedResult = ((parseFloat(row.Result) - minResult) / (maxResult - minResult)) * 100;
+                const normalizedResult = (parseFloat(row.Result) * 100;
                 return {
                   ...row,
                   Result: normalizedResult,
