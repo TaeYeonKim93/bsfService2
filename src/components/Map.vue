@@ -292,7 +292,8 @@ export default defineComponent({
       }
 
       map.value = L.map('map', { 
-        zoomControl: false
+        zoomControl: false,
+        zoomAnimation: false  // 확대/축소 애니메이션 비활성화
       }).setView([36.5, 127.5], 7);
 
       // 지도가 완전히 로드된 후에 이벤트 리스너 추가
