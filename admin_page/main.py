@@ -314,38 +314,34 @@ st.markdown('<div id="dpg-api" style="padding-top: 2rem;"></div>', unsafe_allow_
 dpg_container = st.container()
 with dpg_container:
     st.markdown('<div class="section-header">DPG API 목록</div>', unsafe_allow_html=True)
+    
     col1, col2, col3 = st.columns(3)
+    
     with col1:
-        # API 추가 버튼
-        if st.button('API 추가'):
-            uploaded_file = st.file_uploader("파일을 선택하세요", type=['csv', 'json', 'xlsx'])
-            if uploaded_file is not None:
-                st.write(f"파일 {uploaded_file.name}이(가) 업로드되었습니다.")
-# 업로드된 파일 읽기
+        uploaded_file = st.file_uploader("파일을 선택하세요", type=['csv', 'json', 'xlsx'])
+        if uploaded_file is not None:
             if uploaded_file.name.endswith('.csv'):
                 new_data = pd.read_csv(uploaded_file)
             elif uploaded_file.name.endswith('.json'):
                 new_data = pd.read_json(uploaded_file)
             elif uploaded_file.name.endswith('.xlsx'):
                 new_data = pd.read_excel(uploaded_file)
-            
-            # 기존 DPG_API_list.csv 파일 읽기
-            dpg_api_data = pd.read_csv('/app/data/DPG_API_list.csv', encoding='euc-kr')
-            
-            # 데이터 병합
-            updated_data = pd.concat([dpg_api_data, new_data], ignore_index=True)
-            
-            # 병합된 데이터 저장
-            updated_data.to_csv('/app/data/DPG_API_list.csv', index=False, encoding='euc-kr')
-            
-            st.write(f"파일 {uploaded_file.name}이(가) DPG_API_list.csv에 추가되었습니다.")
+        
+        # 기존 DPG_API_list.csv 파일 읽기
+        dpg_api_data = pd.read_csv('/app/data/DPG_API_list.csv', encoding='euc-kr')
+        
+        # 데이터 병합
+        updated_data = pd.concat([dpg_api_data, new_data], ignore_index=True)
+        
+        # 병합된 데이터 저장
+        updated_data.to_csv('/app/data/DPG_API_list.csv', index=False, encoding='euc-kr')
+        
+        st.write(f"파일 {uploaded_file.name}이(가) DPG_API_list.csv에 추가되었습니다.")
     with col2:
-        # API 세부속성 추가 버튼
-        if st.button('API 세부속성 추가'):
-            uploaded_file = st.file_uploader("세부속성 파일을 선택하세요", type=['csv', 'json', 'xlsx'])
-            if uploaded_file is not None:
-                # 업로드된 파일 처리 로직을 여기에 작성하세요
-                st.write(f"파일 {uploaded_file.name}이(가) 업로드되었습니다.")
+        uploaded_file = st.file_uploader("세부속성 파일을 선택하세요", type=['csv', 'json', 'xlsx'])
+        if uploaded_file is not None:
+            # 업로드된 파일 처리 로직을 여기에 작성하세요
+            st.write(f"파일 {uploaded_file.name}이(가) 업로드되었습니다.")
     
     with col3:
         # AI 프롬프트 버튼
