@@ -249,7 +249,7 @@ export default defineComponent({
         div.style.boxShadow = '0 1px 5px rgba(0,0,0,0.2)';
         div.style.fontSize = '12px';
 
-        const grades = [0, 20, 40, 60, 80];
+        const grades = [0, 4, 8, 12, 16];
         const labels = ['매우 낮음', '낮음', '중간', '높음', '매우 높음'];
 
         div.innerHTML = '<div style="margin-bottom: 5px;"><strong>위험도</strong></div>';
@@ -438,7 +438,7 @@ export default defineComponent({
         div.style.fontSize = '12px';
         div.style.marginTop = '10px';
 
-        const grades = [0, 20, 40, 60, 80];
+        const grades = [0, 4, 8, 12, 16];
         const labels = ['매우 낮음', '낮음', '중간', '높음', '매우 높음'];
 
         div.innerHTML = '<div style="margin-bottom: 5px;"><strong>위험도</strong></div>';
